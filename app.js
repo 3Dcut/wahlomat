@@ -1,5 +1,5 @@
 // ====================================================================
-// WAHL-O-MAT APP LOGIC
+// WAHL-ERA APP LOGIC
 // ====================================================================
 
 (function () {
@@ -16,7 +16,7 @@
   };
 
   // ── Data accessors ─────────────────────────────────────────────────
-  const DATA       = () => window.WAHLOMAT_DATA;
+  const DATA       = () => window.WAHLERA_DATA;
   const questions  = () => DATA().questions;
   const candidates = () => DATA().candidates;
   const parties    = () => DATA().parties || [];
@@ -266,11 +266,9 @@
           </div>
 
           <div class="voting-column">
-            <div class="voting-axis-label">Strategie</div>
             <div class="voting-buttons" id="voting-buttons">
               ${voteButtons}
             </div>
-            <div class="voting-axis-label">Präferenz</div>
           </div>
 
           <div class="pole-card pole-b${glowB}" id="pole-b-card">
@@ -281,7 +279,7 @@
 
         <!-- Hint (collapsible) -->
         ${q.hint ? `
-        <div style="margin-bottom:1rem">
+        <div style="margin-bottom:1.5rem">
           <button id="hint-toggle" class="btn btn-ghost" style="font-size:0.8rem;padding:0.35rem 0.75rem">
             💡 Erläuterung
           </button>
@@ -289,17 +287,23 @@
         </div>
         ` : ''}
 
-        <!-- Actions -->
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:0.75rem;flex-wrap:wrap">
-          <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
-            <button id="btn-weight" class="btn btn-ghost weight-btn${isDoubled ? ' active' : ''}" style="font-size:0.8rem">
-              ⚖ Doppelt gewichten
-            </button>
-            <button id="btn-skip" class="btn btn-ghost" style="font-size:0.8rem">Überspringen</button>
+        <!-- Weighted Vote Focus -->
+        <div style="display:flex;justify-content:center;margin-bottom:2.5rem">
+          <button id="btn-weight" class="btn btn-ghost weight-btn${isDoubled ? ' active' : ''}" style="font-size:1rem;padding:0.85rem 2.5rem;border-width:2px;min-width:16rem">
+            ⚖ Doppelt gewichten
+          </button>
+        </div>
+
+        <!-- Navigation Actions -->
+        <div style="display:grid;grid-template-columns:1fr 1.5fr 1fr;align-items:center;gap:1.5rem;margin-top:1.5rem">
+          <div style="text-align:left">
+            ${index > 0 ? `<button id="btn-prev" class="btn btn-ghost" style="padding:0.75rem 2rem">← Zurück</button>` : ''}
           </div>
-          <div style="display:flex;gap:0.5rem">
-            ${index > 0 ? `<button id="btn-prev" class="btn btn-ghost">← Zurück</button>` : ''}
-            <button id="btn-next" class="btn btn-primary" ${currentAnswer == null ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
+          <div style="text-align:center">
+            <button id="btn-skip" class="btn btn-ghost" style="font-size:0.85rem;padding:0.75rem 2rem">Überspringen</button>
+          </div>
+          <div style="text-align:right">
+            <button id="btn-next" class="btn btn-primary" style="padding:0.75rem 3rem" ${currentAnswer == null ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>
               ${index === total - 1 ? 'Auswerten →' : 'Weiter →'}
             </button>
           </div>
@@ -535,7 +539,7 @@
     });
 
     section.querySelector('#btn-restart')?.addEventListener('click', () => {
-      if (confirm('Wahl-O-Mat zurücksetzen? Alle Antworten gehen verloren.')) {
+      if (confirm('Wahl-Era zurücksetzen? Alle Antworten gehen verloren.')) {
         state.answers = {}; state.weights = {}; state.results = [];
         state.partyResults = []; state.categoryResults = {};
         state.currentQuestion = 0;
@@ -980,8 +984,8 @@
     document.getElementById('btn-dark-toggle')?.addEventListener('click', toggleDarkMode);
 
     // Meta
-    document.title = data.meta.title || 'Wahl-O-Mat';
-    document.querySelectorAll('.meta-title').forEach(el => { el.textContent = data.meta.title || 'Wahl-O-Mat'; });
+    document.title = data.meta.title || 'Wahl-Era';
+    document.querySelectorAll('.meta-title').forEach(el => { el.textContent = data.meta.title || 'Wahl-Era'; });
     document.querySelectorAll('.meta-election').forEach(el => { el.textContent = data.meta.election || ''; });
     document.querySelectorAll('.meta-description').forEach(el => { el.textContent = data.meta.description || ''; });
 

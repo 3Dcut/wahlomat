@@ -1,5 +1,5 @@
 /* ====================================================================
-   WAHL-O-MAT – Custom Styles
+   WAHL-ERA – Custom Styles
    Tailwind CDN handles layout utilities (flex, grid, spacing, etc.)
    This file handles: CSS variables, dark mode, animations, components
    ==================================================================== */
@@ -61,12 +61,14 @@ body {
 
 /* ── Layout helpers ──────────────────────────────────────────────── */
 .screen-inner {
-  max-width: 56rem;
+  max-width: 110rem;
+  width: 96%;
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }
 .screen-inner-wide {
-  max-width: 84rem;
+  max-width: 120rem;
+  width: 98%;
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }
@@ -86,7 +88,8 @@ body {
   transition: all 0.3s ease;
 }
 .wom-nav-inner {
-  max-width: 80rem;
+  max-width: 110rem;
+  width: 96%;
   height: 100%;
   margin: 0 auto;
   padding: 0 1.5rem;

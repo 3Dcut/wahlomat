@@ -1,5 +1,5 @@
 // ====================================================================
-// WAHL-O-MAT KONFIGURATION
+// WAHL-ERA KONFIGURATION
 // ====================================================================
 // Dieses File bearbeiten, um Fragen, Parteien und Kandidat:innen
 // anzupassen. Keine Programmierkenntnisse nötig.
@@ -17,10 +17,10 @@
 //   statements = optionale Begründungen pro Frage (aufklappbar)
 // ====================================================================
 
-window.WAHLOMAT_DATA = {
+window.WAHLERA_DATA = {
 
   meta: {
-    title: "Wahl-O-Mat",
+    title: "Wahl-Era",
     election: "Muster-Wahl 2025",
     description: "Beantworte 20 Fragen und finde heraus, welche Kandidat:innen und Parteien am besten zu dir passen."
   },
