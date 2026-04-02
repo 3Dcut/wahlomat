@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wahl-O-Mat</title>
+  <script>
+    tailwind.config = {
+      darkMode: ['selector', '[data-theme="dark"]']
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ── Navigation ────────────────────────────────────────────────── -->
+  <nav class="wom-nav">
+    <div class="wom-nav-inner">
+      <a href="#start" class="wom-nav-title meta-title">🗳 Wahl-O-Mat</a>
+      <div class="wom-nav-actions">
+        <button id="btn-show-overview" class="btn btn-ghost" style="font-size:0.82rem;padding:0.4rem 0.75rem">
+          Alle Antworten
+        </button>
+        <button id="btn-dark-toggle" class="btn-icon" title="Dark Mode umschalten">🌙</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Screen: Start ─────────────────────────────────────────────── -->
+  <section id="screen-start" class="screen hidden">
+    <div class="screen-inner">
+
+      <!-- Resume banner (filled by app.js if localStorage data exists) -->
+      <div id="resume-banner" class="hidden" style="margin-bottom:2rem"></div>
+
+      <!-- Hero -->
+      <div class="card slide-in-up" style="padding:4rem 2rem;text-align:center;margin-bottom:2.5rem;background:rgba(255,255,255,0.02)">
+        <span class="hero-emoji" style="font-size:5rem;margin-bottom:1.5rem;display:block">🗳️</span>
+        <h1 style="font-size:3rem;font-weight:900;color:var(--text);letter-spacing:-0.05em;margin:0.5rem 0"
+            class="meta-title">Wahl-O-Mat</h1>
+        <p style="font-size:1.1rem;font-weight:700;color:var(--accent-2);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.1em"
+           class="meta-election"></p>
+        <p style="font-size:1rem;color:var(--text-muted);max-width:28rem;margin:0 auto;line-height:1.6"
+           class="meta-description"></p>
+      </div>
+
+      <!-- CTA -->
+      <div class="slide-in-up" style="display:flex;flex-direction:column;gap:1.1rem;align-items:center;animation-delay:0.1s">
+        <button id="btn-start" class="btn btn-primary" style="font-size:1.2rem;padding:1rem 3.5rem">
+          Spiel starten
+        </button>
+        <button id="btn-show-overview-2" class="btn btn-ghost"
+                onclick="document.getElementById('btn-show-overview').click()">
+          Alle Antworten ansehen
+        </button>
+      </div>
+
+      <p style="margin-top:3.5rem;font-size:0.85rem;color:var(--text-light);text-align:center;line-height:1.8;opacity:0.6">
+        Beantworte Fragen zwischen zwei Positionen auf einer Skala von 1–5.<br>
+        Fragen können doppelt gewichtet oder übersprungen werden.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── Screen: Quiz ───────────────────────────────────────────────── -->
+  <section id="screen-quiz" class="screen hidden">
+    <!-- Content rendered by app.js -->
+  </section>
+
+  <!-- ── Screen: Results ───────────────────────────────────────────── -->
+  <section id="screen-results" class="screen hidden">
+    <!-- Content rendered by app.js -->
+  </section>
+
+  <!-- ── Screen: Compare ───────────────────────────────────────────── -->
+  <section id="screen-compare" class="screen hidden">
+    <!-- Content rendered by app.js -->
+  </section>
+
+  <!-- ── Screen: Overview ──────────────────────────────────────────── -->
+  <section id="screen-overview" class="screen hidden">
+    <!-- Content rendered by app.js -->
+  </section>
+
+  <!-- ── Toast container ───────────────────────────────────────────── -->
+  <div id="toast-container"></div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
