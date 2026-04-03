@@ -12,7 +12,11 @@
     weights:         {},   // { q01: 2 } — nur doppelt-gewichtete
     results:         [],   // [{ candidate, matchPercent }, ...] sorted desc
     partyResults:    [],   // [{ party, avgMatch, cohesion, members }, ...]
-    categoryResults: {}    // { category: { candidateId: pct } }
+    categoryResults: {},   // { category: { candidateId: pct } },
+    // Scaling & Filtering state
+    filterParty:     null, // ID of the party to filter by
+    searchQuery:     '',
+    resultsLimit:    10
   };
 
   // ── Data accessors ─────────────────────────────────────────────────
@@ -258,10 +262,8 @@
         <!-- Category -->
         ${q.category ? `<span class="badge badge-accent" style="display:inline-block;margin-bottom:0.875rem">${q.category}</span>` : ''}
 
-        <!-- Bipolar layout: Pol A | Voting | Pol B -->
         <div class="bipolar-layout card" style="padding:2.5rem 2rem;margin-bottom:2.5rem;background:rgba(255,255,255,0.01)">
           <div class="pole-card pole-a${glowA}" id="pole-a-card">
-            <div class="pole-label pole-a">← Allianz / Plan A</div>
             <div class="pole-text">${q.poleA || q.text || ''}</div>
           </div>
 
@@ -272,8 +274,7 @@
           </div>
 
           <div class="pole-card pole-b${glowB}" id="pole-b-card">
-            <div class="pole-label pole-b" style="justify-content:flex-end">Widerstand / Plan B →</div>
-            <div class="pole-text" style="text-align:right">${q.poleB || ''}</div>
+            <div class="pole-text">${q.poleB || ''}</div>
           </div>
         </div>
 
@@ -435,14 +436,35 @@
           <button class="tab-btn" data-tab="parties">Parteien</button>
         </div>
 
+        <!-- Filter & Search Bar -->
+        <div class="results-filter-bar slide-in-up" style="animation-delay:0.1s">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="input-search" class="search-input" placeholder="Nach Name suchen..." value="${state.searchQuery}">
+          </div>
+          <div class="party-filter-scroll">
+            <div class="party-filter-chip${state.filterParty === null ? ' active' : ''}" data-party-id="all">Alle</div>
+            ${parties().map(p => `
+              <div class="party-filter-chip${state.filterParty === p.id ? ' active' : ''}" data-party-id="${p.id}" style="--pcolor:${p.color}">
+                ${p.name}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
         <!-- Kandidat:innen + Parteien nebeneinander -->
         <div class="results-grid">
           <div class="results-col" id="col-candidates">
-            <h2 class="results-col-title" style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">Kandidat:innen</h2>
-            ${renderCandidateRows()}
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+              <h2 class="results-col-title" style="margin:0;border:0">Kandidat:innen</h2>
+              <span class="text-muted" style="font-size:0.75rem;font-weight:600" id="candidate-count-label"></span>
+            </div>
+            <div id="candidates-container">
+              ${renderCandidateRows()}
+            </div>
           </div>
           <div class="results-col mobile-hidden" id="col-parties">
-            <h2 class="results-col-title" style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em">Parteien</h2>
+            <h2 class="results-col-title" style="margin-bottom:1rem">Parteien</h2>
             ${renderPartyRows()}
           </div>
         </div>
@@ -475,20 +497,47 @@
       </div>
     `;
 
-    // Animate bars
-    requestAnimationFrame(() => {
-      section.querySelectorAll('.result-bar-fill[data-pct]').forEach(bar => {
-        requestAnimationFrame(() => { bar.style.width = bar.dataset.pct + '%'; });
+    // Search input
+    section.querySelector('#input-search')?.addEventListener('input', (e) => {
+      state.searchQuery = e.target.value;
+      state.resultsLimit = 10;
+      const container = section.querySelector('#candidates-container');
+      if (container) container.innerHTML = renderCandidateRows();
+      attachRowListeners();
+    });
+
+    // Party filters
+    section.querySelectorAll('.party-filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        state.filterParty = chip.dataset.partyId === 'all' ? null : chip.dataset.partyId;
+        state.resultsLimit = 10;
+        section.querySelectorAll('.party-filter-chip').forEach(c => c.classList.toggle('active', c === chip));
+        const container = section.querySelector('#candidates-container');
+        if (container) container.innerHTML = renderCandidateRows();
+        attachRowListeners();
       });
     });
 
-    // Click candidate row → compare
-    section.querySelectorAll('.result-row[data-candidate-id]').forEach(row => {
-      row.addEventListener('click', () => {
-        renderCompare(row.dataset.candidateId);
-        showScreen('compare');
+    function attachRowListeners() {
+      // Animate bars
+      section.querySelectorAll('.result-bar-fill[data-pct]').forEach(bar => {
+        requestAnimationFrame(() => { bar.style.width = bar.dataset.pct + '%'; });
       });
-    });
+      // Click candidate row
+      section.querySelectorAll('.result-row[data-candidate-id]').forEach(row => {
+        row.addEventListener('click', () => {
+          renderCompare(row.dataset.candidateId); showScreen('compare');
+        });
+      });
+      // Show more
+      section.querySelector('#btn-show-more')?.addEventListener('click', () => {
+        state.resultsLimit += 30;
+        const container = section.querySelector('#candidates-container');
+        if (container) container.innerHTML = renderCandidateRows();
+        attachRowListeners();
+      });
+    }
+    attachRowListeners();
 
     // Click party row → expand members
     section.querySelectorAll('.party-row-toggle').forEach(btn => {
@@ -551,16 +600,34 @@
   }
 
   function renderCandidateRows() {
-    return state.results.map((r, i) => {
+    let list = state.results;
+
+    // Apply Party Filter
+    if (state.filterParty) {
+      list = list.filter(r => r.candidate.party === state.filterParty);
+    }
+
+    // Apply Search
+    if (state.searchQuery) {
+      const q = state.searchQuery.toLowerCase();
+      list = list.filter(r => r.candidate.name.toLowerCase().includes(q));
+    }
+
+    const totalFiltered = list.length;
+    const limitedList = list.slice(0, state.resultsLimit);
+    const hasMore = totalFiltered > state.resultsLimit;
+
+    const rows = limitedList.map((r, i) => {
       const pct = r.matchPercent ?? 0;
       const label = r.matchPercent != null ? `${r.matchPercent}%` : '–';
-      const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '';
-      const rank = medal || (i + 1);
+      const medal = i === 0 && !state.filterParty && !state.searchQuery ? '🥇' : i === 1 && !state.filterParty && !state.searchQuery ? '🥈' : i === 2 && !state.filterParty && !state.searchQuery ? '🥉' : '';
+      const originalRank = state.results.findIndex(res => res.candidate.id === r.candidate.id) + 1;
+      const rank = medal || (state.filterParty || state.searchQuery ? `Rang ${originalRank}` : i + 1);
       const party = candidateParty(r.candidate);
-      const delay = (i * 0.05).toFixed(2);
+      const delay = (i * 0.03).toFixed(2);
       return `
         <div class="result-row animate-in" data-candidate-id="${r.candidate.id}" style="animation-delay:${delay}s">
-          <span style="width:2rem;text-align:center;font-size:1.15rem;font-weight:900">${rank}</span>
+          <span style="width:2.5rem;text-align:center;font-size:0.9rem;font-weight:900;color:var(--text-muted)">${rank}</span>
           <span class="candidate-dot" style="background:${r.candidate.color};width:1.15rem;height:1.15rem;box-shadow:0 0 12px ${r.candidate.color}66, 0 0 0 3px var(--bg), 0 0 0 5px ${r.candidate.color}33"></span>
           <div style="flex:0 0 auto;min-width:130px">
             <div style="font-weight:800;font-size:1.1rem;color:var(--text);letter-spacing:-0.02em">${r.candidate.name}</div>
@@ -569,9 +636,29 @@
           <div class="flex-1 result-bar-track">
             <div class="result-bar-fill" style="width:0%;background:linear-gradient(90deg,${r.candidate.color},${r.candidate.color}aa)" data-pct="${pct}"></div>
           </div>
-          <span style="font-size:1.25rem;font-weight:900;color:var(--text);min-width:4rem;text-align:right;font-variant-numeric: tabular-nums;">${label}</span>
+          <span style="font-size:1.25rem;font-weight:900;color:var(--text);min-width:4rem;text-align:right">${label}</span>
         </div>`;
     }).join('');
+
+    const showMoreHtml = hasMore ? `
+      <div class="show-more-container animate-fade-in">
+        <button id="btn-show-more" class="btn btn-ghost" style="width:100%">
+          ${totalFiltered - state.resultsLimit} weitere Kandidat:innen anzeigen
+        </button>
+      </div>` : '';
+
+    const emptyHtml = list.length === 0 ? `
+      <div class="card animate-fade-in" style="padding:2rem;text-align:center;color:var(--text-muted)">
+        Keine Kandidat:innen mit diesen Filtern gefunden.
+      </div>` : '';
+
+    // Update label (this will be handled by observer or manual call)
+    setTimeout(() => {
+      const label = document.getElementById('candidate-count-label');
+      if (label) label.textContent = `${totalFiltered} Treffer`;
+    }, 0);
+
+    return rows + showMoreHtml + emptyHtml;
   }
 
   function renderPartyRows() {
@@ -740,42 +827,54 @@
     const qs = questions();
 
     const blocks = qs.map((q, qi) => {
-      // Group candidates by their answer value to handle stacking collisions
-      const byValue = {};
+      // Grouping: { [value]: { [partyId]: [candidate, ...] } }
+      const groups = {};
       cands.forEach(c => {
         const v = c.answers[q.id] ?? 3;
-        if (!byValue[v]) byValue[v] = [];
-        byValue[v].push(c);
+        const pId = c.party || 'independent';
+        if (!groups[v]) groups[v] = {};
+        if (!groups[v][pId]) groups[v][pId] = [];
+        groups[v][pId].push(c);
       });
 
-      const figures = cands.map(c => {
-        const v = c.answers[q.id] ?? 3;
-        const idx = byValue[v].indexOf(c);
-        const pct = ((v - 1) / 4) * 100;
-        
-        // Improved clustering: stagger vertically AND add a slight horizontal jitter
-        const bottomOffset = idx * 2.15;
-        const horizontalJitter = (idx % 2 === 0 ? 0 : (idx * 0.45)); // Slight offset for stacked items
-        
-        const stmt = c.statements?.[q.id] || '';
-        const stmtHtml = stmt
-          ? `<div class="fig-bubble hidden" id="bubble-${qi}-${c.id}">
-               <div style="margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem">
-                 <span class="candidate-dot" style="background:${c.color};width:0.65rem;height:0.65rem"></span>
-                 <strong style="font-weight:800">${c.name}</strong>
-               </div>
-               <div>${stmt}</div>
-             </div>`
-          : '';
-        const firstName = c.name.split(' ')[0];
-        return `
-          <div class="fig-item" style="left:calc(${pct}% - 1.125rem + ${horizontalJitter}rem);bottom:${bottomOffset}rem"
-               data-qi="${qi}" data-candidate="${c.id}" title="${c.name}: ${v}">
-            <div class="fig-icon" style="background:${c.color}">${firstName[0]}</div>
-            <div class="fig-name">${firstName}</div>
-            ${stmtHtml}
-          </div>`;
-      }).join('');
+      const figures = [];
+      Object.keys(groups).forEach(v => {
+        const val = parseInt(v);
+        const partiesInVal = groups[v];
+        const pct = ((val - 1) / 4) * 100;
+
+        let partyIdx = 0;
+        Object.keys(partiesInVal).forEach(pId => {
+          const members = partiesInVal[pId];
+          const party = partyById(pId);
+          const color = party ? party.color : '#666';
+          const nameLabel = party ? party.name : 'Parteilos';
+          
+          // Stagger party groups at the same value
+          const bottomOffset = partyIdx * 2.5;
+          const horizontalJitter = (partyIdx % 2 === 0 ? 0 : 0.3);
+          
+          const isGroup = members.length > 1;
+          const badgeHtml = isGroup ? `<div class="group-badge">${members.length}</div>` : '';
+          const firstChar = isGroup ? (party ? party.name[0] : 'P') : members[0].name[0];
+          const subLabel = isGroup ? (party ? party.name : 'Gruppe') : members[0].name.split(' ')[0];
+
+          figures.push(`
+            <div class="fig-item fig-item-group animate-fade-in" 
+                 style="left:calc(${pct}% - 1.25rem + ${horizontalJitter}rem);bottom:${bottomOffset}rem;z-index:${10 + partyIdx}"
+                 data-qi="${qi}" data-val="${val}" data-party="${pId}" title="${nameLabel}: ${members.length} Kandidat:innen">
+              <div class="fig-icon" style="background:${color}">${firstChar}</div>
+              <div class="fig-name">${subLabel}</div>
+              ${badgeHtml}
+              <!-- Hidden Data for Popup -->
+              <script type="application/json" class="group-data">
+                ${JSON.stringify(members.map(m => ({ id: m.id, name: m.name, color: m.color, statement: m.statements?.[q.id] })))}
+              </script>
+            </div>
+          `);
+          partyIdx++;
+        });
+      });
 
       // User's own answer figure
       const userAnswer = state.answers[q.id];
@@ -783,7 +882,7 @@
       const userPct = hasAnswer ? ((userAnswer - 1) / 4) * 100 : 50;
       const userFig = `
         <div class="fig-item fig-user${hasAnswer ? '' : ' fig-unanswered'}"
-             style="left:calc(${userPct}% - 1.25rem)"
+             style="left:calc(${userPct}% - 1.25rem);z-index:50"
              data-qi="${qi}" data-user="true"
              title="${hasAnswer ? 'Deine Antwort: ' + userAnswer : 'Übersprungen — klicken zum Beantworten'}">
           <div class="fig-icon fig-icon-user">Du</div>
@@ -797,16 +896,15 @@
           </div>
           <div class="ov-three-col">
             <div class="ov-pole ov-pole-a">
-              <span class="pole-label pole-a">← Position A</span>
               <p class="pole-text" style="font-size:0.875rem">${q.poleA || q.text || ''}</p>
             </div>
-            <div class="ov-scale-col">
+            <div class="ov-scale-col" style="position:relative">
               <div class="ov-scale-track">
                 ${[1,2,3,4,5].map(n =>
                   `<div class="ov-tick" style="left:calc(${(n-1)/4*100}% - 0.5px)"></div>`
                 ).join('')}
                 <div class="ov-figures">
-                  ${figures}
+                  ${figures.join('')}
                   ${userFig}
                 </div>
               </div>
@@ -815,20 +913,19 @@
               </div>
             </div>
             <div class="ov-pole ov-pole-b">
-              <span class="pole-label pole-b" style="justify-content:flex-end">Position B →</span>
-              <p class="pole-text" style="font-size:0.875rem;text-align:right">${q.poleB || ''}</p>
+              <p class="pole-text" style="font-size:0.875rem">${q.poleB || ''}</p>
             </div>
           </div>
         </div>`;
     }).join('');
 
     section.innerHTML = `
-      <div class="screen-inner-wide">
+      <div class="screen-inner-wide animate-fade-in">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem">
           <div>
             <h1 style="font-size:1.6rem;font-weight:800;color:var(--text);letter-spacing:-0.02em;margin-bottom:0.25rem">Einzelantworten</h1>
             <p class="text-muted" style="font-size:0.85rem">
-              Klicke auf eine Figur für die Begründung. Klicke auf <strong>Du</strong>, um deine Antwort zu ändern.
+              Klicke auf eine Gruppe für Details. Klicke auf <strong>Du</strong>, um deine Antwort zu ändern.
             </p>
           </div>
           <button id="btn-ov-back-results" class="btn btn-primary">← Zurück zu Ergebnissen</button>
@@ -846,20 +943,13 @@
       showScreen('results');
     });
 
-    // Candidate figure clicks → speech bubble toggle
-    section.querySelectorAll('.fig-item:not([data-user])').forEach(fig => {
-      fig.addEventListener('click', e => {
+    // Group clicks -> show popup
+    section.querySelectorAll('.fig-item-group').forEach(group => {
+      group.addEventListener('click', e => {
         e.stopPropagation();
-        const qi = fig.dataset.qi;
-        const cid = fig.dataset.candidate;
-        const bubble = section.querySelector(`#bubble-${qi}-${cid}`);
-        if (!bubble) return;
-        // Close all other bubbles in this block
-        const block = section.querySelector(`#ov-block-${qi}`);
-        block?.querySelectorAll('.fig-bubble').forEach(b => {
-          if (b !== bubble) b.classList.add('hidden');
-        });
-        bubble.classList.toggle('hidden');
+        const dataStr = group.querySelector('.group-data').textContent;
+        const members = JSON.parse(dataStr);
+        showGroupPopup(group, members);
       });
     });
 
@@ -873,11 +963,44 @@
       });
     });
 
-    // Click elsewhere → close all bubbles
+    // Click elsewhere → close all popups
     section.addEventListener('click', () => {
-      section.querySelectorAll('.fig-bubble').forEach(b => b.classList.add('hidden'));
+      section.querySelectorAll('.group-popup').forEach(p => p.remove());
     });
   }
+
+  function showGroupPopup(anchor, members) {
+    // Remove existing popups
+    document.querySelectorAll('.group-popup').forEach(p => p.remove());
+
+    const popup = document.createElement('div');
+    popup.className = 'group-popup';
+    
+    const listHtml = members.map(m => `
+      <div class="group-member-item" onclick="window.WAHLERA_APP.navigateToCandidate('${m.id}')">
+        <span class="candidate-dot" style="background:${m.color}"></span>
+        <div style="flex:1">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--text)">${m.name}</div>
+          ${m.statement ? `<div style="font-size:0.7rem;color:var(--text-muted);font-style:italic;margin-top:2px">"${m.statement.substring(0,60)}${m.statement.length>60?'...':''}"</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+
+    popup.innerHTML = `
+      <div class="group-popup-header">Kandidat:innen (${members.length})</div>
+      <div class="group-popup-list">${listHtml}</div>
+    `;
+
+    anchor.appendChild(popup);
+  }
+
+  // Exposure for popup click
+  window.WAHLERA_APP = {
+    navigateToCandidate: (id) => {
+      renderCompare(id);
+      showScreen('compare');
+    }
+  };
 
   function openInlineEditor(section, qi, q) {
     // Remove any existing editors

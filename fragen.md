@@ -27,13 +27,9 @@ Deutschland sollte ein neues Bündnis mit Venezuela anstreben.
 -
 Deutschland muss sich weiterhin von Venezuela distanzieren.
 
-Deutschland sollte in seinem Krieg auf den Einsatz von Söldnern setzen.
+Deutschland sollte als Söldnernation agieren und Söldner in Kriegen priorisieren.
 -
-Expansionskriege müssen mit eigenen Truppen geführt werden.
-
-Deutschland sollte zur größten Söldnernation werden.
--
-Deutschland sollte nur aus politischen Gründen in Kriege ziehen.
+Kriege sollten nur aus politischen Gründen und mit eigenen Truppen geführt werden.
 
 
 
@@ -62,13 +58,9 @@ Deutschland soll sich auf das eigene Land konzentrieren.
 
 Innenpolitik
 
-Konkrete Vorhaben und Militärische Operationen müssen geheim gehalten werden.
+Die Regierung sollte an feste Regeln gebunden sein und ihre Vorhaben transparent mit dem Volk teilen.
 -
-Das Volk hat ein Recht darauf zu erfahren, was die Regierung genau plant.
-
-Regierung und Kongress sollten festen Regeln folgen.
--
-Regierung und Kongress sollten maximalen Handlungsspielraum haben
+Um effektiv zu sein, benötigt die Regierung maximale Geheimhaltung und einen freien Handlungsspielraum.
 
 Minister sollten vom Volk gewählt werden.
 -

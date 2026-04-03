@@ -1,28 +1,28 @@
 // ====================================================================
 // WAHL-ERA KONFIGURATION
 // ====================================================================
-// Dieses File bearbeiten, um Fragen, Parteien und Kandidat:innen
+// Dieses File bearbeitet, um Fragen, Parteien und Kandidat:innen
 // anzupassen. Keine Programmierkenntnisse nötig.
 //
 // FRAGEN: Jede Frage hat zwei Pole (poleA und poleB).
-//   poleA = linke/konservative/ablehnende Position (entspricht Wert 1)
-//   poleB = rechte/progressive/befürwortende Position (entspricht Wert 5)
-//   hint  = optionale Erläuterung für Nutzer:innen
+//   poleA = Erste Position (entspricht Wert 1)
+//   poleB = Zweite Position (entspricht Wert 5)
+//   hint  = Erläuterung für Nutzer:innen
 //
 // PARTEIEN: id, name, color (Hex). Kandidat:innen verweisen per
 //   party-Feld auf die Partei-id. party: null = parteilos.
 //
 // KANDIDAT:INNEN: answers enthält pro Fragen-id einen Wert 1–5.
 //   1 = klar Pol A · 3 = neutral · 5 = klar Pol B
-//   statements = optionale Begründungen pro Frage (aufklappbar)
+//   statements = Begründungen pro Frage (aufklappbar)
 // ====================================================================
 
 window.WAHLERA_DATA = {
 
   meta: {
-    title: "Wahl-Era",
-    election: "Muster-Wahl 2025",
-    description: "Beantworte 20 Fragen und finde heraus, welche Kandidat:innen und Parteien am besten zu dir passen."
+    title: "Era-O-Mat",
+    election: "Kongresswahlen 2026",
+    description: "Beantworte 20 Fragen zur Zukunft Deutschlands in Era und finde heraus, welche Kandidat:innen am besten zu dir passen."
   },
 
   // ── Parteien ──────────────────────────────────────────────────────
@@ -37,281 +37,268 @@ window.WAHLERA_DATA = {
   questions: [
     {
       id: "q01",
-      category: "Wirtschaft",
-      poleA: "Der Mindestlohn soll auf dem aktuellen Niveau eingefroren werden.",
-      poleB: "Der Mindestlohn soll auf mindestens 15 Euro pro Stunde angehoben werden.",
-      hint: "Der aktuelle Mindestlohn liegt bei 12,41 Euro. Eine Anhebung entlastet Niedriglohnbeschäftigte, könnte aber laut Kritikern Arbeitsplätze kosten."
+      category: "Kultur",
+      poleA: "Wechselnde Roleplaycharaktere sind wichtig für die Unterhaltung und Immersion.",
+      poleB: "Kongressmitglieder sollten neutrale Namen nutzen und sich einen Ruf erarbeiten.",
+      hint: "Hemmt roleplay die Seriösität oder Arbeit in der Politik?"
     },
     {
       id: "q02",
-      category: "Wirtschaft",
-      poleA: "Unternehmenssteuern sollen gesenkt werden, um Wachstum zu fördern.",
-      poleB: "Unternehmen sollen stärker besteuert werden, um öffentliche Güter zu finanzieren.",
-      hint: "Deutschland hat im internationalen Vergleich hohe Unternehmenssteuern. Senkungen könnten Investitionen anziehen, Erhöhungen könnten Staatseinnahmen steigern."
+      category: "Kultur",
+      poleA: "Reggie darf nur noch deutsch sprechen.",
+      poleB: "In Reggies Anwesenheit spricht der Chat englisch.",
+      hint: "Beugen wir uns weiter der Diktatur eines Wahnsinnigen??"
     },
     {
       id: "q03",
-      category: "Wirtschaft",
-      poleA: "Die Schuldenbremse soll unverändert bleiben – keine neuen Staatsschulden.",
-      poleB: "Der Staat soll mehr in Infrastruktur investieren, auch wenn dafür neue Schulden nötig sind.",
-      hint: "Die Schuldenbremse begrenzt die Neuverschuldung auf 0,35 % des BIP. Befürworter sehen sie als Haushaltsdisziplin, Kritiker als Investitionsbremse."
+      category: "Kultur",
+      poleA: "Projekte wie ein eigenes Radio sollten aktiv verfolgt werden.",
+      poleB: "Die Zeit sollte primär in die politische Arbeit und das Spielgeschehen fließen.",
+      hint: "Die Kongressmitgieder haben nur begrenzte zeitliche Ressourcen."
     },
     {
       id: "q04",
-      category: "Klimaschutz",
-      poleA: "Der Kohleausstieg soll wie geplant erst 2038 erfolgen.",
-      poleB: "Der Kohleausstieg soll auf 2030 vorgezogen werden.",
-      hint: "Ein früherer Kohleausstieg würde den CO₂-Ausstoß schneller senken, belastet aber Energieversorgung und Beschäftigung in Kohleregionen."
+      category: "Außenpolitik",
+      poleA: "Deutschland sollte ein Bündnis mit Belgien, den Niederlanden und Schweden gemeinsam forcieren.",
+      poleB: "Deutschland sollte sich einem bestehenden Block anschließen.",
+      hint: "Aktives gestalten von Partnerschaften oder sich einem Bündnis anschließen."
     },
     {
       id: "q05",
-      category: "Klimaschutz",
-      poleA: "Ein hoher CO₂-Preis schadet der Wirtschaft und soll abgelehnt werden.",
-      poleB: "Ein CO₂-Preis von mindestens 100 Euro pro Tonne soll eingeführt werden.",
-      hint: "Ein höherer CO₂-Preis verteuert fossile Energie und schafft Anreize für klimafreundliches Verhalten, belastet aber einkommensschwache Haushalte stärker."
+      category: "Außenpolitik",
+      poleA: "Deutschland sollte am Bündnis mit Schweden festhalten.",
+      poleB: "Deutschland sollte sich mit den stärksten Mächten verbünden.",
+      hint: "Loyalität zu langjährigen Partnern oder rein machtpolitische Orientierung."
     },
     {
       id: "q06",
-      category: "Klimaschutz",
-      poleA: "Das Verbrennerverbot für Neuwagen soll verhindert oder aufgehoben werden.",
-      poleB: "Neuzulassungen von Autos mit Verbrennungsmotor sollen ab 2030 verboten werden.",
-      hint: "Die EU plant ein De-facto-Verbot ab 2035. Ein früheres Verbot würde die Transformation der Automobilindustrie beschleunigen."
+      category: "Außenpolitik",
+      poleA: "Deutschland sollte ein neues Bündnis mit Venezuela anstreben.",
+      poleB: "Deutschland muss sich weiterhin von Venezuela distanzieren.",
+      hint: "Venezuela strebt weiter eine Kooperation an, lehnt aber ab Fehler gemacht zu haben."
     },
     {
       id: "q07",
-      category: "Soziales",
-      poleA: "Das Renteneintrittsalter soll bei 67 Jahren bleiben.",
-      poleB: "Das Renteneintrittsalter soll auf 70 Jahre angehoben werden.",
-      hint: "Angesichts des demografischen Wandels sehen Befürworter einer Anhebung dies als notwendig für die Finanzierbarkeit. Kritiker verweisen auf körperlich belastende Berufe."
+      category: "Außenpolitik",
+      poleA: "Deutschland sollte langfristig als Söldnernation agieren.",
+      poleB: "Kriege sollten nur aus politischen Gründen geführt werden.",
+      hint: "Internationale Macht, politische Arbeit oder Profit."
     },
     {
       id: "q08",
-      category: "Soziales",
-      poleA: "Ein bedingungsloses Grundeinkommen ist nicht finanzierbar und abzulehnen.",
-      poleB: "Ein bedingungsloses Grundeinkommen soll eingeführt werden.",
-      hint: "Ein Grundeinkommen garantiert jedem Bürger einen festen Betrag, unabhängig von Arbeit. Die Finanzierbarkeit und Auswirkungen auf den Arbeitsmarkt sind umstritten."
+      category: "Nationale Einstellung",
+      poleA: "Deutschland sollte wirtschaftliches Wachstum priorisieren und die Kerngebiete halten.",
+      poleB: "Deutschland sollte aggressiv expandieren und neue Gebiete erobern.",
+      hint: "Bleibt deutschland dauerhaft eco oder zum großen Teil war?"
     },
     {
       id: "q09",
-      category: "Soziales",
-      poleA: "Eine Vermögenssteuer schadet dem Wirtschaftsstandort und soll abgelehnt werden.",
-      poleB: "Große Vermögen sollen durch eine Vermögenssteuer stärker besteuert werden.",
-      hint: "Deutschland hatte bis 1997 eine Vermögenssteuer. Befürworter sehen sie als Beitrag zur Umverteilung, Kritiker warnen vor Kapitalflucht."
+      category: "Nationale Einstellung",
+      poleA: "Einbürgerungsanträge sollten im Regelfall angenommen werden.",
+      poleB: "Bewerber:innen sollten streng geprüft werden.",
+      hint: "Liberale vs. restriktive Einwanderungspolitik für neue Spieler:innen."
     },
     {
       id: "q10",
-      category: "Migration",
-      poleA: "Zuwanderung aus Nicht-EU-Ländern soll stärker begrenzt werden.",
-      poleB: "Die Zuwanderung von Fachkräften aus Nicht-EU-Ländern soll erleichtert werden.",
-      hint: "Deutschland hat einen wachsenden Fachkräftemangel. Vereinfachte Einwanderungsregeln könnten diesen mildern, erfordern aber Integrationsmaßnahmen."
+      category: "Nationale Einstellung",
+      poleA: "Alle dürfen ihre Fabriken frei platzieren, auch im Feindesland.",
+      poleB: "Fabriken dürfen nur im eigenen Land platziert werden.",
+      hint: "Embargos verhängen, nationale Produktion einfordern oder freie Marktwirtschaft?"
     },
     {
       id: "q11",
-      category: "Migration",
-      poleA: "Abgelehnte Asylbewerber sollen konsequenter und schneller abgeschoben werden.",
-      poleB: "Abschiebungen sollen auf ein Minimum reduziert werden, humanitäre Gründe haben Vorrang.",
-      hint: "Aktuell wird nur ein Bruchteil der ausreisepflichtigen Personen tatsächlich abgeschoben. Das Thema ist juristisch und humanitär komplex."
+      category: "Nationale Einstellung",
+      poleA: "Bündnisse sollten vor allem auf einer gemeinsamen Kultur basieren.",
+      poleB: "Bündnisse sollten vor allem strategische Ziele verfolgen.",
+      hint: "Venezuela oder Niederlande?"
     },
     {
       id: "q12",
-      category: "Migration",
-      poleA: "Geflüchtete sollen erst nach abgeschlossenem Asylverfahren arbeiten dürfen.",
-      poleB: "Geflüchtete sollen sofort nach Ankunft eine Arbeitserlaubnis erhalten.",
-      hint: "Frühere Arbeitserlaubnisse fördern Integration und entlasten den Arbeitsmarkt, werfen aber auch Fragen zur Priorisierung von Asylverfahren auf."
+      category: "Nationale Einstellung",
+      poleA: "Deutschland soll forciert eigene Proxys aufbauen und unterhalten.",
+      poleB: "Deutschland soll sich auf das eigene Land konzentrieren.",
+      hint: "Projektion von Macht nach außen durch Marionettenstaaten vs. Innenfokus."
     },
     {
       id: "q13",
-      category: "Bildung",
-      poleA: "Studiengebühren sollen von den Ländern selbst entschieden werden dürfen.",
-      poleB: "Studiengebühren sollen bundesweit per Gesetz verboten werden.",
-      hint: "In Deutschland sind Studiengebühren weitgehend abgeschafft. Ein bundesweites Verbot würde Länder daran hindern, sie wieder einzuführen."
+      category: "Innenpolitik",
+      poleA: "Die Regierung sollte an feste Regeln gebunden sein und ihre Vorhaben transparent teilen.",
+      poleB: "Um effektiv zu sein, benötigt die Regierung maximale Geheimhaltung und Spielraum.",
+      hint: "Volksbeteiligung und Information vs. operative Freiheit der Exekutive."
     },
     {
       id: "q14",
-      category: "Bildung",
-      poleA: "Schulen sollen weiterhin überwiegend als Halbtagsschulen geführt werden.",
-      poleB: "Ganztagsschulen sollen flächendeckend ausgebaut und verpflichtend eingeführt werden.",
-      hint: "Ganztagsschulen verbessern laut Studien Bildungschancen und entlasten Familien, erfordern aber erhebliche Investitionen in Personal und Infrastruktur."
+      category: "Innenpolitik",
+      poleA: "Minister sollten vom Volk gewählt werden.",
+      poleB: "Minister werden vom Präsidenten ernannt.",
+      hint: "Stärkung der direkten Demokratie vs. Effizienz durch Ernennung von Fachpersonal."
     },
     {
       id: "q15",
-      category: "Digitalisierung",
-      poleA: "Der Glasfaserausbau soll dem Markt überlassen bleiben – ohne staatliche Subventionen.",
-      poleB: "Der Staat soll den flächendeckenden Glasfaserausbau aktiv finanzieren.",
-      hint: "Deutschland hinkt beim Glasfaserausbau hinter anderen Ländern her. Staatliche Förderung könnte dies beschleunigen, ist aber teuer."
+      category: "Innenpolitik",
+      poleA: "Influencer sind eine gute Strategie, um neue Spieler:innen zu gewinnen.",
+      poleB: "Influencer sind eine Gefahr für die Stabilität des Spiels.",
+      hint: "Bewertung von externem Marketing und dessen Impact auf die Community-Balance."
     },
     {
       id: "q16",
-      category: "Digitalisierung",
-      poleA: "KI in der Verwaltung soll möglichst frei einsetzbar sein – weniger Regulierung.",
-      poleB: "Künstliche Intelligenz in öffentlichen Verwaltungen soll streng reguliert werden.",
-      hint: "KI kann Verwaltungsprozesse effizienter machen, birgt aber Risiken für Datenschutz und diskriminierungsfreie Entscheidungen."
+      category: "Innenpolitik",
+      poleA: "Entscheidungen sollten möglichst breit und demokratisch getroffen werden.",
+      poleB: "Ein Diktator führt das Land ohne Regierung oder Kongress.",
+      hint: "Demokratischer Konsens vs. autokratische Effizienz."
     },
     {
       id: "q17",
-      category: "Sicherheit",
-      poleA: "Videoüberwachung im öffentlichen Raum schränkt Freiheiten ein und soll begrenzt werden.",
-      poleB: "Videoüberwachung im öffentlichen Raum soll deutlich ausgebaut werden.",
-      hint: "Mehr Kameras können Sicherheitsgefühl erhöhen und Strafverfolgung erleichtern, schränken aber Privatsphäre und Anonymität ein."
+      category: "Sonstiges",
+      poleA: "Hunde",
+      poleB: "Katzen",
+      hint: "Diese Frage wurde mehrfach vorgeschlagen."
     },
     {
       id: "q18",
-      category: "Sicherheit",
-      poleA: "Der Verteidigungshaushalt soll reduziert und das Geld in Soziales investiert werden.",
-      poleB: "Der Verteidigungshaushalt soll dauerhaft auf mindestens 2 % des BIP angehoben werden.",
-      hint: "Das NATO-Ziel von 2 % BIP für Verteidigung ist politisch umstritten. Befürworter sehen es als notwendig für kollektive Sicherheit."
+      category: "Sonstiges",
+      poleA: "Es wird eine nationale Farbe festgelegt und durchgesetzt.",
+      poleB: "Es gibt freie Farbwahlen ohne negative Konsequenzen.",
+      hint: "Werden Farbdiskussionen vermieden oder als Teil des Spiels akzeptiert?"
     },
     {
       id: "q19",
-      category: "Gesundheit",
-      poleA: "Das duale System aus gesetzlicher und privater Krankenversicherung soll erhalten bleiben.",
-      poleB: "Gesetzliche und private Krankenversicherung sollen zu einer Bürgerversicherung zusammengelegt werden.",
-      hint: "Eine Bürgerversicherung würde alle Einkommensarten einbeziehen. Privatversicherungen und Ärzte befürchten Einnahmeeinbußen."
+      category: "Sonstiges",
+      poleA: "Alle Kommunikation mit dem Volk sollte im Spiel angestrebt werden.",
+      poleB: "Es wird von der Mehrheit erwartet, auf Discord präsent zu sein.",
+      hint: "Fokus auf die Spielmechaniken vs. Nutzung externer Tools als Standard."
     },
     {
       id: "q20",
-      category: "Europa",
-      poleA: "Nationale Souveränität hat Vorrang – die EU soll weniger Kompetenzen erhalten.",
-      poleB: "Die EU soll mehr Kompetenzen bekommen, auch wenn das nationale Souveränität kostet.",
-      hint: "Mehr europäische Integration kann grenzüberschreitende Probleme effektiver lösen, schwächt aber die Entscheidungshoheit der Mitgliedstaaten."
+      category: "Sonstiges",
+      poleA: "Deutschland hat ein Recht darauf, eigene Moderator:innen zu stellen.",
+      poleB: "Die Moderator:innen sollten unabhängig vom Spielgeschehen agieren.",
+      hint: "Wie sollte sich deutschland im Umgang mit den Entwicklern positionieren?"
     }
   ],
 
   // ── Kandidat:innen ────────────────────────────────────────────────
+  // ACHTUNG: Die Antworten (answers) wurden auf 3 (neutral) zurückgesetzt, 
+  // da sich die Fragen geändert haben. Bitte neu einpflegen.
   candidates: [
-    // ── Sozialdemokraten (2 Kandidat:innen)
     {
       id: "k-anna",
       name: "Anna Bauer",
       party: "sozial",
-      color: "#E3000F",
       answers: {
-        "q01": 5, "q02": 4, "q03": 5, "q04": 4, "q05": 4,
-        "q06": 4, "q07": 2, "q08": 3, "q09": 5, "q10": 4,
-        "q11": 2, "q12": 4, "q13": 5, "q14": 4, "q15": 4,
-        "q16": 4, "q17": 2, "q18": 3, "q19": 5, "q20": 4
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q01": "Wir setzen uns für einen fairen Lohn ein, von dem man tatsächlich leben kann.",
-        "q09": "Große Vermögen müssen stärker zur Finanzierung des Gemeinwesens beitragen."
+        "q01": "Anna Bauer: Roleplay ist das Herzstück unserer Community.",
+        "q09": "Liberale Einbürgerung fördert die Vielfalt in unserem Land."
       }
     },
     {
       id: "k-markus",
       name: "Markus Weber",
       party: "sozial",
-      color: "#E3000F",
       answers: {
-        "q01": 4, "q02": 3, "q03": 5, "q04": 4, "q05": 3,
-        "q06": 3, "q07": 2, "q08": 4, "q09": 4, "q10": 5,
-        "q11": 2, "q12": 5, "q13": 5, "q14": 5, "q15": 4,
-        "q16": 3, "q17": 3, "q18": 3, "q19": 5, "q20": 4
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q08": "Ein Grundeinkommen kann soziale Absicherung modernisieren – wir prüfen Modelle.",
-        "q10": "Fachkräfteeinwanderung ist eine Chance für unsere Wirtschaft."
+        "q02": "Markus Weber: Sprache sollte kein Hindernis für den Spielspaß sein.",
+        "q15": "Influencer bringen frischen Wind, müssen aber behutsam integriert werden."
       }
     },
-
-    // ── Konservative (2 Kandidat:innen)
     {
       id: "k-petra",
       name: "Petra Hoffmann",
       party: "konserv",
-      color: "#1a1a2e",
       answers: {
-        "q01": 2, "q02": 5, "q03": 2, "q04": 2, "q05": 1,
-        "q06": 1, "q07": 4, "q08": 1, "q09": 1, "q10": 3,
-        "q11": 5, "q12": 2, "q13": 3, "q14": 3, "q15": 2,
-        "q16": 2, "q17": 5, "q18": 5, "q19": 1, "q20": 2
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q02": "Niedrigere Steuern stärken den Wirtschaftsstandort Deutschland.",
-        "q11": "Wer kein Bleiberecht hat, muss konsequent das Land verlassen."
+        "q03": "Petra Hoffmann: Politische Stabilität erfordert Fokus auf die Kernaufgaben.",
+        "q10": "Wirtschaftliche Sicherheit geht vor Experimente im Feindesland."
       }
     },
     {
       id: "k-thomas",
       name: "Thomas Richter",
       party: "konserv",
-      color: "#1a1a2e",
       answers: {
-        "q01": 2, "q02": 4, "q03": 1, "q04": 1, "q05": 2,
-        "q06": 2, "q07": 5, "q08": 1, "q09": 1, "q10": 4,
-        "q11": 5, "q12": 2, "q13": 2, "q14": 2, "q15": 3,
-        "q16": 2, "q17": 4, "q18": 5, "q19": 2, "q20": 2
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q03": "Die Schuldenbremse schützt zukünftige Generationen vor Schuldenlast.",
-        "q18": "Sicherheit kostet Geld – Verteidigungsausgaben sind eine Investition in Frieden."
+        "q04": "Thomas Richter: Strategische Bündnisse sind die Basis unserer Verteidigung.",
+        "q11": "Nutzen geht vor Kultur, wenn es um das Überleben der Nation geht."
       }
     },
-
-    // ── Grüne (2 Kandidat:innen)
     {
       id: "k-lena",
       name: "Lena Grün",
       party: "gruen",
-      color: "#1AA037",
       answers: {
-        "q01": 4, "q02": 2, "q03": 4, "q04": 5, "q05": 5,
-        "q06": 5, "q07": 1, "q08": 4, "q09": 4, "q10": 5,
-        "q11": 2, "q12": 5, "q13": 5, "q14": 5, "q15": 5,
-        "q16": 5, "q17": 1, "q18": 2, "q19": 4, "q20": 5
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q04": "Der Kohleausstieg 2030 ist für das Klima unbedingt notwendig.",
-        "q06": "Elektromobilität ist die Zukunft – wir müssen jetzt handeln."
+        "q05": "Lena Grün: Loyalität zu unseren Partnern ist unantastbar.",
+        "q18": "Individuelle Freiheit bei der Farbwahl stärkt die Kreativität."
       }
     },
     {
       id: "k-jonas",
       name: "Jonas Grün",
       party: "gruen",
-      color: "#1AA037",
       answers: {
-        "q01": 5, "q02": 1, "q03": 5, "q04": 5, "q05": 5,
-        "q06": 5, "q07": 1, "q08": 5, "q09": 5, "q10": 5,
-        "q11": 1, "q12": 5, "q13": 5, "q14": 5, "q15": 5,
-        "q16": 5, "q17": 1, "q18": 1, "q19": 5, "q20": 5
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q08": "Ein Grundeinkommen gibt Menschen echte Freiheit – wir wollen es erproben.",
-        "q18": "Sicherheit schafft man durch Diplomatie, nicht durch Aufrüstung."
+        "q06": "Jonas Grün: Wir sollten Gräben zuschütten und den Dialog suchen.",
+        "q13": "Transparenz ist die Grundlage für das Vertrauen der Bürger."
       }
     },
-
-    // ── Liberale (2 Kandidat:innen)
     {
       id: "k-felix",
       name: "Felix Frei",
       party: "liberal",
-      color: "#c8a200",
       answers: {
-        "q01": 3, "q02": 5, "q03": 2, "q04": 3, "q05": 3,
-        "q06": 3, "q07": 3, "q08": 2, "q09": 2, "q10": 5,
-        "q11": 3, "q12": 4, "q13": 2, "q14": 3, "q15": 3,
-        "q16": 1, "q17": 3, "q18": 4, "q19": 2, "q20": 4
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q10": "Fachkräfteeinwanderung ist der Schlüssel für unsere Wirtschaft.",
-        "q16": "Bürokratische Regulierung von KI bremst Innovation und Fortschritt."
+        "q07": "Felix Frei: Wir müssen unsere Stärken auf dem Weltmarkt ausspielen.",
+        "q20": "Unabhängige Moderation schützt vor politischer Einflussnahme."
       }
     },
     {
       id: "k-sara",
       name: "Sara Liberal",
       party: "liberal",
-      color: "#c8a200",
       answers: {
-        "q01": 2, "q02": 5, "q03": 2, "q04": 2, "q05": 2,
-        "q06": 2, "q07": 4, "q08": 1, "q09": 1, "q10": 5,
-        "q11": 4, "q12": 4, "q13": 1, "q14": 2, "q15": 4,
-        "q16": 1, "q17": 3, "q18": 4, "q19": 1, "q20": 5
+        "q01": 3, "q02": 3, "q03": 3, "q04": 3, "q05": 3,
+        "q06": 3, "q07": 3, "q08": 3, "q09": 3, "q10": 3,
+        "q11": 3, "q12": 3, "q13": 3, "q14": 3, "q15": 3,
+        "q16": 3, "q17": 3, "q18": 3, "q19": 3, "q20": 3
       },
       statements: {
-        "q02": "Markt statt Staat – Steuersenkungen schaffen Wachstum für alle.",
-        "q20": "Ein starkes Europa ist unser wichtigster geopolitischer Wettbewerbsvorteil."
+        "q01": "Sara Liberal: Wettbewerb der Ideen belebt das gesamte Projekt.",
+        "q08": "Wirtschaftlicher Erfolg ist die Basis für alles andere."
       }
     }
   ]
