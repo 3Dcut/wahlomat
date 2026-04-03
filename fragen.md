@@ -31,6 +31,13 @@ Deutschland sollte als Söldnernation agieren und Söldner in Kriegen priorisier
 -
 Kriege sollten nur aus politischen Gründen und mit eigenen Truppen geführt werden.
 
+Deutschland sollte ein friedliches Bündnis mit Frankreich anstreben.
+-
+Deutschland sollte Frankreich als langfristigen Feind definieren und Reparationen einfordern.
+
+Deutschland sollte ein friedliches Bündnis mit Italien anstreben.
+-
+Deutschland sollte Italien als langfristigen Feind definieren und Reparationen einfordern.
 
 
 Nationale Einstellung
@@ -74,6 +81,9 @@ Entscheidungen sollten möglichst breit und demokratisch getroffen werden.
 -
 Ein Diktator ohne Regierung oder Kongress führt das Land.
 
+Ich vertrete im Kongress hauptsächlich meine Partei.
+-
+Ich handle stets nach meinem eigenen Gewissen auch gegen die Wünsche meiner Partei.
 
 
 Sonstiges
@@ -93,3 +103,7 @@ Es wird von der Mehrheit erwartet, auf Discord präsent zu sein.
 Deutschland hat ein Recht darauf, eigene Moderator:innen zu stellen.
 -
 Die Moderator:innen sollten unabhängig vom Spielgeschehen agieren.
+
+Ich habe die Fragen gewissenhaft und sinnvoll beantwortet.
+-
+Für RP ist es mir wichtig, mit Humor zu glänzen.

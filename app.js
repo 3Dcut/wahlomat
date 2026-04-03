@@ -95,7 +95,7 @@
   }
 
   // ── Router ─────────────────────────────────────────────────────────
-  const SCREENS = ['start', 'quiz', 'results', 'compare', 'overview'];
+  const SCREENS = ['start', 'quiz', 'results', 'compare', 'overview', 'profile'];
 
   function showScreen(id, pushState = true) {
     SCREENS.forEach(s => {
@@ -117,6 +117,7 @@
     showScreen(id, false);
     if (id === 'results') renderResults();
     if (id === 'overview') renderOverview();
+    if (id === 'profile' && state.selectedCandidateId) renderProfile(state.selectedCandidateId);
   });
 
   // ── Score calculation ──────────────────────────────────────────────
@@ -423,81 +424,117 @@
       return;
     }
 
+    // Identify Top 3
+    const top3 = state.results.slice(0, 3);
+    const heroHtml = top3.length > 0 ? `
+      <div class="results-hero slide-in-up" style="animation-delay:0.1s">
+        ${top3.map((r, i) => {
+          const party = candidateParty(r.candidate);
+          const color = party ? party.color : 'var(--accent)';
+          const medal = ['🥇', '🥈', '🥉'][i];
+          const pct = r.matchPercent ?? 0;
+          return `
+            <div class="card hero-match-card animate-in" 
+                 style="--card-color:${color}; --card-color-alpha:${color}33; animation-delay:${i * 0.1}s"
+                 onclick="window.WAHLERA_APP.navigateToCompare('${r.candidate.id}')">
+              <div class="hero-rank-badge">${medal}</div>
+              <div class="hero-avatar-wrap">
+                <div class="hero-avatar" style="border-color:${color}">${r.candidate.name[0]}</div>
+              </div>
+              <div class="hero-match-pct">${pct}%</div>
+              <div class="hero-match-label">Übereinstimmung</div>
+              <div class="hero-info">
+                <div class="hero-name">${r.candidate.name}</div>
+                <div class="hero-party" style="color:${color}">${party ? party.name : 'Parteilos'}</div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    ` : '';
+
     section.innerHTML = `
       <div class="screen-inner">
-        <h1 style="font-size:2.25rem;font-weight:900;color:var(--text);letter-spacing:-0.04em;margin-bottom:0.5rem" class="slide-in-up">Deine Auswertung</h1>
-        <p class="text-muted slide-in-up" style="font-size:0.95rem;margin-bottom:2.5rem;animation-delay:0.05s;font-weight:600;text-transform:uppercase;letter-spacing:0.05em">
-          Analyse abgeschlossen: <strong>${answeredCount}</strong> / ${questions().length} Fragen ausgewertet.
-        </p>
+        <header style="margin-bottom:3rem" class="slide-in-up">
+          <h1 style="font-size:3rem;font-weight:900;color:var(--text);letter-spacing:-0.05em;margin-bottom:0.5rem">Deine Auswertung</h1>
+          <p class="text-muted" style="font-size:1.1rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em">
+            Analyse abgeschlossen: <strong>${answeredCount}</strong> / ${questions().length} Fragen ausgewertet.
+          </p>
+        </header>
 
-        <!-- Mobile Tabs (Visible only on small screens) -->
-        <div class="tab-bar results-mobile-tabs" style="display:none;margin-bottom:1.5rem">
+        <!-- Top 3 Hero -->
+        ${heroHtml}
+
+        <!-- Mobile Tabs -->
+        <div class="tab-bar results-mobile-tabs" style="display:none;margin-bottom:2rem">
           <button class="tab-btn active" data-tab="candidates">Kandidat:innen</button>
           <button class="tab-btn" data-tab="parties">Parteien</button>
         </div>
 
         <!-- Filter & Search Bar -->
-        <div class="results-filter-bar slide-in-up" style="animation-delay:0.1s">
+        <div class="results-filter-bar slide-in-up" style="animation-delay:0.2s">
           <div class="search-wrapper">
             <span class="search-icon">🔍</span>
             <input type="text" id="input-search" class="search-input" placeholder="Nach Name suchen..." value="${state.searchQuery}">
           </div>
           <div class="party-filter-scroll">
-            <div class="party-filter-chip${state.filterParty === null ? ' active' : ''}" data-party-id="all">Alle</div>
+            <div class="party-filter-chip${state.filterParty === null ? ' active' : ''}" data-party-id="all">Alle Parteien</div>
             ${parties().map(p => `
-              <div class="party-filter-chip${state.filterParty === p.id ? ' active' : ''}" data-party-id="${p.id}" style="--pcolor:${p.color}">
+              <div class="party-filter-chip${state.filterParty === p.id ? ' active' : ''}" data-party-id="${p.id}">
                 ${p.name}
               </div>
             `).join('')}
           </div>
         </div>
 
-        <!-- Kandidat:innen + Parteien nebeneinander -->
+        <!-- Main Grid -->
         <div class="results-grid">
           <div class="results-col" id="col-candidates">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-              <h2 class="results-col-title" style="margin:0;border:0">Kandidat:innen</h2>
-              <span class="text-muted" style="font-size:0.75rem;font-weight:600" id="candidate-count-label"></span>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+              <h2 style="font-size:1.25rem;font-weight:900;margin:0">Alle Kandidat:innen</h2>
+              <span class="badge badge-accent" id="candidate-count-label"></span>
             </div>
             <div id="candidates-container">
               ${renderCandidateRows()}
             </div>
           </div>
           <div class="results-col mobile-hidden" id="col-parties">
-            <h2 class="results-col-title" style="margin-bottom:1rem">Parteien</h2>
+            <h2 style="font-size:1.25rem;font-weight:900;margin-bottom:1.5rem">Parteien</h2>
             ${renderPartyRows()}
           </div>
         </div>
 
-        <!-- Category breakdown -->
-        <div style="margin-top:0.5rem">
-          <button id="btn-cat-toggle" class="btn btn-ghost" style="width:100%;justify-content:space-between;font-size:0.85rem">
-            <span>📊 Ergebnisse nach Thema</span>
-            <span id="cat-arrow">▼</span>
-          </button>
-          <div id="cat-section" class="hidden" style="margin-top:0.75rem;overflow-x:auto">
+        <!-- CTA & Tools -->
+        <div style="display:grid;grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top:2rem">
+          <div class="cta-next-step" style="margin:0">
+            <div class="cta-next-step-text">
+              <strong style="display:block;font-size:1.1rem;color:var(--text);margin-bottom:0.25rem">Detail-Analyse</strong>
+              Vergleiche deine Positionen Punkt für Punkt mit allen Kandidat:innen.
+            </div>
+            <button id="btn-to-overview" class="btn btn-primary" style="padding:1rem 2.5rem">Einzelantworten →</button>
+          </div>
+          <div class="card" style="padding:1.5rem; display:flex; flex-direction:column; gap:0.75rem">
+             <button id="btn-cat-toggle" class="btn btn-ghost" style="width:100%">📊 Themen-Check</button>
+             <button id="btn-share" class="btn btn-ghost" style="width:100%">🔗 Ergebnis teilen</button>
+             <button id="btn-restart" class="btn btn-ghost" style="width:100%; color:var(--danger)">↩ Neustart</button>
+          </div>
+        </div>
+
+        <div id="cat-section" class="hidden" style="margin-top:2rem">
+          <h3 style="margin-bottom:1rem">Übereinstimmung nach Themenbereichen</h3>
+          <div style="overflow-x:auto" class="card">
             ${renderCategoryTable()}
           </div>
-        </div>
-
-        <!-- CTA: Einzelantworten -->
-        <div class="cta-next-step">
-          <div class="cta-next-step-text">
-            <strong>Nächster Schritt:</strong>
-            Sieh dir an, wie jede:r Kandidat:in bei jeder Frage abgestimmt hat — und passe deine Antworten an.
-          </div>
-          <button id="btn-to-overview" class="btn btn-primary">Einzelantworten →</button>
-        </div>
-
-        <!-- Secondary actions -->
-        <div style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:0.75rem">
-          <button id="btn-share" class="btn btn-ghost">🔗 Teilen</button>
-          <button id="btn-restart" class="btn btn-ghost">↩ Neustart</button>
         </div>
       </div>
     `;
 
-    // Search input
+    // Re-attach listeners
+    attachResultsListeners(section);
+  }
+
+  function attachResultsListeners(section) {
+    // Search
     section.querySelector('#input-search')?.addEventListener('input', (e) => {
       state.searchQuery = e.target.value;
       state.resultsLimit = 10;
@@ -506,7 +543,7 @@
       attachRowListeners();
     });
 
-    // Party filters
+    // Party chips
     section.querySelectorAll('.party-filter-chip').forEach(chip => {
       chip.addEventListener('click', () => {
         state.filterParty = chip.dataset.partyId === 'all' ? null : chip.dataset.partyId;
@@ -519,14 +556,15 @@
     });
 
     function attachRowListeners() {
-      // Animate bars
+      // Bars
       section.querySelectorAll('.result-bar-fill[data-pct]').forEach(bar => {
         requestAnimationFrame(() => { bar.style.width = bar.dataset.pct + '%'; });
       });
-      // Click candidate row
-      section.querySelectorAll('.result-row[data-candidate-id]').forEach(row => {
+      // Rows
+      section.querySelectorAll('.result-row-compact').forEach(row => {
         row.addEventListener('click', () => {
-          renderCompare(row.dataset.candidateId); showScreen('compare');
+          renderCompare(row.dataset.candidateId);
+          showScreen('compare');
         });
       });
       // Show more
@@ -539,47 +577,34 @@
     }
     attachRowListeners();
 
-    // Click party row → expand members
+    // Party toggles
     section.querySelectorAll('.party-row-toggle').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const members = section.querySelector('#party-members-' + btn.dataset.partyId);
-        if (members) members.classList.toggle('hidden');
+        members?.classList.toggle('hidden');
         btn.textContent = members && !members.classList.contains('hidden') ? '▲' : '▼';
       });
     });
 
     // Category toggle
     section.querySelector('#btn-cat-toggle')?.addEventListener('click', () => {
-      const catSection = section.querySelector('#cat-section');
-      const arrow = section.querySelector('#cat-arrow');
-      catSection.classList.toggle('hidden');
-      arrow.textContent = catSection.classList.contains('hidden') ? '▼' : '▲';
+      section.querySelector('#cat-section').classList.toggle('hidden');
+      window.scrollTo({ top: section.querySelector('#cat-section').offsetTop - 100, behavior: 'smooth' });
     });
 
-    // Mobile tab logic
-    const mobileTabs = section.querySelectorAll('.results-mobile-tabs .tab-btn');
-    mobileTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
-        mobileTabs.forEach(t => t.classList.toggle('active', t === tab));
-        section.querySelector('#col-candidates').classList.toggle('mobile-hidden', target !== 'candidates');
-        section.querySelector('#col-parties').classList.toggle('mobile-hidden', target !== 'parties');
-      });
-    });
-
-    // Detect if we should show mobile tabs
-    if (window.innerWidth <= 840) {
-      section.querySelector('.results-mobile-tabs').style.display = 'flex';
-    }
-
-    // Share
+    // Share, Restart, etc.
     section.querySelector('#btn-share')?.addEventListener('click', () => {
       const url = getShareUrl();
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => showToast('🔗 Link kopiert!')).catch(() => prompt('Link kopieren:', url));
-      } else {
-        prompt('Link kopieren:', url);
+        navigator.clipboard.writeText(url).then(() => showToast('🔗 Share-Link kopiert!'));
+      } else { alert(url); }
+    });
+
+    section.querySelector('#btn-restart')?.addEventListener('click', () => {
+      if (confirm('Wirklich neu starten?')) {
+        state.answers = {}; state.weights = {}; state.currentQuestion = 0;
+        clearStorage(); renderQuestion(0, 'initial'); showScreen('quiz');
       }
     });
 
@@ -587,27 +612,22 @@
       renderOverview(); showScreen('overview');
     });
 
-    section.querySelector('#btn-restart')?.addEventListener('click', () => {
-      if (confirm('Wahl-Era zurücksetzen? Alle Antworten gehen verloren.')) {
-        state.answers = {}; state.weights = {}; state.results = [];
-        state.partyResults = []; state.categoryResults = {};
-        state.currentQuestion = 0;
-        clearStorage();
-        renderQuestion(0, 'initial');
-        showScreen('quiz');
-      }
-    });
+    // Mobile tabs
+    const tabs = section.querySelectorAll('.results-mobile-tabs .tab-btn');
+    tabs.forEach(t => t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const target = t.dataset.tab;
+      section.querySelector('#col-candidates').classList.toggle('mobile-hidden', target !== 'candidates');
+      section.querySelector('#col-parties').classList.toggle('mobile-hidden', target !== 'parties');
+    }));
+    if (window.innerWidth <= 840) section.querySelector('.results-mobile-tabs').style.display = 'flex';
   }
 
   function renderCandidateRows() {
     let list = state.results;
 
-    // Apply Party Filter
-    if (state.filterParty) {
-      list = list.filter(r => r.candidate.party === state.filterParty);
-    }
-
-    // Apply Search
+    if (state.filterParty) list = list.filter(r => r.candidate.party === state.filterParty);
     if (state.searchQuery) {
       const q = state.searchQuery.toLowerCase();
       list = list.filter(r => r.candidate.name.toLowerCase().includes(q));
@@ -619,46 +639,27 @@
 
     const rows = limitedList.map((r, i) => {
       const pct = r.matchPercent ?? 0;
-      const label = r.matchPercent != null ? `${r.matchPercent}%` : '–';
-      const medal = i === 0 && !state.filterParty && !state.searchQuery ? '🥇' : i === 1 && !state.filterParty && !state.searchQuery ? '🥈' : i === 2 && !state.filterParty && !state.searchQuery ? '🥉' : '';
-      const originalRank = state.results.findIndex(res => res.candidate.id === r.candidate.id) + 1;
-      const rank = medal || (state.filterParty || state.searchQuery ? `Rang ${originalRank}` : i + 1);
       const party = candidateParty(r.candidate);
-      const delay = (i * 0.03).toFixed(2);
+      const delay = (i * 0.02).toFixed(2);
       return `
-        <div class="result-row animate-in" data-candidate-id="${r.candidate.id}" style="animation-delay:${delay}s">
-          <span style="width:2.5rem;text-align:center;font-size:0.9rem;font-weight:900;color:var(--text-muted)">${rank}</span>
-          <span class="candidate-dot" style="background:${r.candidate.color};width:1.15rem;height:1.15rem;box-shadow:0 0 12px ${r.candidate.color}66, 0 0 0 3px var(--bg), 0 0 0 5px ${r.candidate.color}33"></span>
-          <div style="flex:0 0 auto;min-width:130px">
-            <div style="font-weight:800;font-size:1.1rem;color:var(--text);letter-spacing:-0.02em">${r.candidate.name}</div>
-            ${party ? `<div style="font-size:0.75rem;color:${party.color};font-weight:800;text-transform:uppercase;letter-spacing:0.05em;opacity:0.8">${party.name}</div>` : ''}
+        <div class="result-row-compact animate-fade-in" data-candidate-id="${r.candidate.id}" style="animation-delay:${delay}s">
+          <span style="font-size:0.8rem;font-weight:800;color:var(--text-muted);text-align:center">${i + 1}</span>
+          <span class="candidate-dot" style="background:${r.candidate.color};width:0.85rem;height:0.85rem;box-shadow:0 0 8px ${r.candidate.color}66"></span>
+          <div style="overflow:hidden">
+            <div style="font-weight:700;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.candidate.name}</div>
+            ${party ? `<div style="font-size:0.65rem;color:${party.color};font-weight:800;text-transform:uppercase">${party.name}</div>` : ''}
           </div>
-          <div class="flex-1 result-bar-track">
-            <div class="result-bar-fill" style="width:0%;background:linear-gradient(90deg,${r.candidate.color},${r.candidate.color}aa)" data-pct="${pct}"></div>
-          </div>
-          <span style="font-size:1.25rem;font-weight:900;color:var(--text);min-width:4rem;text-align:right">${label}</span>
+          <div style="font-weight:900;font-size:1.1rem;text-align:right">${pct}%</div>
+          <button class="btn-icon" style="padding:0.3rem" title="Steckbrief">👤</button>
         </div>`;
     }).join('');
 
-    const showMoreHtml = hasMore ? `
-      <div class="show-more-container animate-fade-in">
-        <button id="btn-show-more" class="btn btn-ghost" style="width:100%">
-          ${totalFiltered - state.resultsLimit} weitere Kandidat:innen anzeigen
-        </button>
-      </div>` : '';
-
-    const emptyHtml = list.length === 0 ? `
-      <div class="card animate-fade-in" style="padding:2rem;text-align:center;color:var(--text-muted)">
-        Keine Kandidat:innen mit diesen Filtern gefunden.
-      </div>` : '';
-
-    // Update label (this will be handled by observer or manual call)
     setTimeout(() => {
       const label = document.getElementById('candidate-count-label');
       if (label) label.textContent = `${totalFiltered} Treffer`;
     }, 0);
 
-    return rows + showMoreHtml + emptyHtml;
+    return rows + (hasMore ? `<button id="btn-show-more" class="btn btn-ghost" style="width:100%;margin-top:1rem">Mehr anzeigen</button>` : '');
   }
 
   function renderPartyRows() {
@@ -820,6 +821,72 @@
     });
   }
 
+  // ── Screen: Profile ────────────────────────────────────────────────
+  function renderProfile(candidateId) {
+    const candidate = candidates().find(c => c.id === candidateId);
+    if (!candidate) return;
+    const section = document.getElementById('screen-profile');
+    const party = candidateParty(candidate);
+    const color = candidate.color || (party ? party.color : 'var(--accent)');
+
+    // Answers Overview
+    const answersHtml = questions().map(q => {
+      const val = candidate.answers[q.id] ?? 3;
+      const isImportant = candidate.importantQuestions?.includes(q.id);
+      const dots = [1, 2, 3, 4, 5].map(v => {
+        const activeClass = v === val ? (v <= 2 ? ' active-side-a' : v >= 4 ? ' active-side-b' : ' active-neutral') : '';
+        return `<div class="mini-dot${activeClass}"></div>`;
+      }).join('');
+
+      return `
+        <div class="answer-mini-card animate-fade-in">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <span style="font-size:0.75rem;font-weight:700;color:var(--text-muted)">${q.category || 'Allgemein'}</span>
+            ${isImportant ? '<span class="profile-important-badge">Fokus</span>' : ''}
+          </div>
+          <div style="font-size:0.85rem;font-weight:600;margin:0.25rem 0">${q.poleA.substring(0, 40)}...</div>
+          <div class="mini-scale">${dots}</div>
+          ${isImportant && candidate.statements?.[q.id] ? `<div style="font-size:0.75rem;color:var(--text-light);font-style:italic;margin-top:0.5rem;border-top:1px solid var(--border);padding-top:0.5rem">"${candidate.statements[q.id]}"</div>` : ''}
+        </div>`;
+    }).join('');
+
+    section.innerHTML = `
+      <div class="screen-inner animate-fade-in">
+        <button id="btn-profile-back" class="btn btn-ghost" style="margin-bottom:1.5rem">← Zurück</button>
+        
+        <div class="profile-header">
+          <div class="profile-avatar" style="border-color:${color};color:${color}">${candidate.name[0]}</div>
+          <div style="flex:1">
+            <h1 style="font-size:2.5rem;font-weight:900;margin:0">${candidate.name}</h1>
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem">
+              ${party ? partyBadgeHtml(candidate) : ''}
+              ${candidate.inCongress ? '<span class="badge badge-success">Sitz im Kongress</span>' : '<span class="badge" style="background:var(--surface-2);color:var(--text-muted)">Nicht im Kongress</span>'}
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-intro card">${candidate.intro || 'Keine Beschreibung verfügbar.'}</div>
+
+        <div class="profile-links">
+          ${candidate.profileUrl ? `<a href="${candidate.profileUrl}" target="_blank" class="btn btn-primary">Era-Profil 🔗</a>` : ''}
+          ${candidate.articleUrl ? `<a href="${candidate.articleUrl}" target="_blank" class="btn btn-ghost">Wahlprogramm 📝</a>` : ''}
+        </div>
+
+        <div class="profile-section-title">📊 Antwort-Übersicht</div>
+        <div class="answers-grid">${answersHtml}</div>
+
+        <div style="margin-top:3rem;text-align:center">
+           <button id="btn-profile-compare" class="btn btn-primary" style="padding:1rem 3rem">Mit mir vergleichen →</button>
+        </div>
+      </div>`;
+
+    section.querySelector('#btn-profile-back').addEventListener('click', () => showScreen('results'));
+    section.querySelector('#btn-profile-compare').addEventListener('click', () => {
+      renderCompare(candidateId);
+      showScreen('compare');
+    });
+  }
+
   // ── Screen: Overview ───────────────────────────────────────────────
   function renderOverview() {
     const section = document.getElementById('screen-overview');
@@ -848,92 +915,78 @@
           const members = partiesInVal[pId];
           const party = partyById(pId);
           const color = party ? party.color : '#666';
-          const nameLabel = party ? party.name : 'Parteilos';
           
-          // Stagger party groups at the same value
-          const bottomOffset = partyIdx * 2.5;
-          const horizontalJitter = (partyIdx % 2 === 0 ? 0 : 0.3);
-          
+          // Stack logic
+          const yOffset = partyIdx * 0.45; 
           const isGroup = members.length > 1;
-          const badgeHtml = isGroup ? `<div class="group-badge">${members.length}</div>` : '';
-          const firstChar = isGroup ? (party ? party.name[0] : 'P') : members[0].name[0];
-          const subLabel = isGroup ? (party ? party.name : 'Gruppe') : members[0].name.split(' ')[0];
+          const label = isGroup ? members.length : '';
+          const char = isGroup ? (party ? party.name[0] : 'G') : members[0].name[0];
 
           figures.push(`
-            <div class="fig-item fig-item-group animate-fade-in" 
-                 style="left:calc(${pct}% - 1.25rem + ${horizontalJitter}rem);bottom:${bottomOffset}rem;z-index:${10 + partyIdx}"
-                 data-qi="${qi}" data-val="${val}" data-party="${pId}" title="${nameLabel}: ${members.length} Kandidat:innen">
-              <div class="fig-icon" style="background:${color}">${firstChar}</div>
-              <div class="fig-name">${subLabel}</div>
-              ${badgeHtml}
-              <!-- Hidden Data for Popup -->
-              <script type="application/json" class="group-data">
-                ${JSON.stringify(members.map(m => ({ id: m.id, name: m.name, color: m.color, statement: m.statements?.[q.id] })))}
-              </script>
+            <div class="fig-swarm-item" 
+                 style="left:${pct}%; bottom:${yOffset}rem; z-index:${10 + partyIdx}"
+                 onclick="window.WAHLERA_APP.showGroupDetails('${q.id}', '${pId}', ${val})">
+              <div class="fig-swarm-icon" style="background:${color}; border-color:${color}">${char}</div>
+              ${isGroup ? `<div class="fig-swarm-badge">${label}</div>` : ''}
             </div>
           `);
           partyIdx++;
         });
       });
 
-      // User's own answer figure
       const userAnswer = state.answers[q.id];
-      const hasAnswer = userAnswer != null;
-      const userPct = hasAnswer ? ((userAnswer - 1) / 4) * 100 : 50;
-      const userFig = `
-        <div class="fig-item fig-user${hasAnswer ? '' : ' fig-unanswered'}"
-             style="left:calc(${userPct}% - 1.25rem);z-index:50"
-             data-qi="${qi}" data-user="true"
-             title="${hasAnswer ? 'Deine Antwort: ' + userAnswer : 'Übersprungen — klicken zum Beantworten'}">
-          <div class="fig-icon fig-icon-user">Du</div>
-          <div class="fig-name">Du</div>
-        </div>`;
+      const userPct = userAnswer != null ? ((userAnswer - 1) / 4) * 100 : null;
+      const userIndicator = userPct !== null ? `
+        <div class="user-line" style="left:${userPct}%">
+          <div class="user-indicator">DU</div>
+        </div>
+      ` : '';
 
       return `
-        <div class="ov-block card" id="ov-block-${qi}">
-          <div class="ov-block-header">
-            ${q.category ? `<span class="badge badge-accent">${q.category}</span>` : ''}
-          </div>
-          <div class="ov-three-col">
-            <div class="ov-pole ov-pole-a">
-              <p class="pole-text" style="font-size:0.875rem">${q.poleA || q.text || ''}</p>
-            </div>
-            <div class="ov-scale-col" style="position:relative">
-              <div class="ov-scale-track">
-                ${[1,2,3,4,5].map(n =>
-                  `<div class="ov-tick" style="left:calc(${(n-1)/4*100}% - 0.5px)"></div>`
-                ).join('')}
-                <div class="ov-figures">
-                  ${figures.join('')}
-                  ${userFig}
-                </div>
-              </div>
-              <div class="ov-tick-labels">
-                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
-              </div>
-            </div>
-            <div class="ov-pole ov-pole-b">
-              <p class="pole-text" style="font-size:0.875rem">${q.poleB || ''}</p>
+        <div class="ov-block-modern animate-fade-in" style="animation-delay:${qi * 0.05}s">
+          <div class="ov-question-header">
+            <div>
+              <div style="font-size:0.75rem; font-weight:800; color:var(--accent); text-transform:uppercase; margin-bottom:0.25rem">${q.category || 'Allgemein'}</div>
+              <div class="ov-question-text">${q.text || ''}</div>
             </div>
           </div>
-        </div>`;
+          
+          <div class="ov-scale-modern">
+            <div class="ov-pole-label-modern ov-pole-a">${q.poleA || ''}</div>
+            <div class="ov-pole-label-modern ov-pole-b">${q.poleB || ''}</div>
+            
+            <div class="ov-axis-line"></div>
+            <div class="ov-axis-labels">
+              <span>Starke Ablehnung</span>
+              <span>Neutral</span>
+              <span>Starke Zustimmung</span>
+            </div>
+            
+            <div class="ov-figures-container">
+              ${userIndicator}
+              ${figures.join('')}
+            </div>
+          </div>
+        </div>
+      `;
     }).join('');
 
     section.innerHTML = `
-      <div class="screen-inner-wide animate-fade-in">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem">
+      <div class="screen-inner slide-in-up">
+        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4rem">
           <div>
-            <h1 style="font-size:1.6rem;font-weight:800;color:var(--text);letter-spacing:-0.02em;margin-bottom:0.25rem">Einzelantworten</h1>
-            <p class="text-muted" style="font-size:0.85rem">
-              Klicke auf eine Gruppe für Details. Klicke auf <strong>Du</strong>, um deine Antwort zu ändern.
-            </p>
+            <h1 style="font-size:2.5rem; font-weight:900; margin:0">Alle Einzelantworten</h1>
+            <p class="text-muted">Vergleiche die Positionen aller Kandidat:innen im Detail.</p>
           </div>
-          <button id="btn-ov-back-results" class="btn btn-primary">← Zurück zu Ergebnissen</button>
-        </div>
-        <div>${blocks}</div>
-      </div>`;
+          <button id="btn-ov-back-results" class="btn btn-primary">← Zurück zur Übersicht</button>
+        </header>
+        <div style="max-width:70rem; margin:0 auto">${blocks}</div>
+      </div>
+    `;
 
-    attachOverviewListeners(section, qs);
+    section.querySelector('#btn-ov-back-results')?.addEventListener('click', () => {
+      renderResults(); showScreen('results');
+    });
   }
 
   function attachOverviewListeners(section, qs) {
@@ -999,6 +1052,11 @@
     navigateToCandidate: (id) => {
       renderCompare(id);
       showScreen('compare');
+    },
+    navigateToProfile: (id) => {
+      state.selectedCandidateId = id;
+      renderProfile(id);
+      showScreen('profile');
     }
   };
 
