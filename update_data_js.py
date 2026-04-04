@@ -9,40 +9,46 @@ def update_data_js():
         print("Error: Files not found.")
         return
 
-    # Read the current data.js to preserve the header, parties, and questions
+    # Read the current data.js
     with open(data_js_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
-    # Find the candidates start line
+    # Find the candidates start line (robust check)
     candidates_start_idx = -1
     for i, line in enumerate(lines):
-        if 'candidates: [' in line:
+        if 'candidates:' in line:
             candidates_start_idx = i
             break
             
     if candidates_start_idx == -1:
-        print("Error: Could not find candidates array in data.js")
+        print("Error: Could not find 'candidates:' in data.js")
         return
 
-    # Keep everything up to the candidates: [ line
-    new_lines = lines[:candidates_start_idx]
-    new_lines.append('  candidates: \n')
+    # Keep everything up to the candidates: line
+    # We want to keep the 'candidates:' part itself if it doesn't already have the '[' 
+    # In the current file, line 271 is '  candidates: '
+    header = lines[:candidates_start_idx + 1]
+    
+    # Ensure line 271 doesn't have a trailing bracket if we're prepending one
+    if '[' in header[-1]:
+        header[-1] = header[-1].split('[')[0] + '\n'
+    elif ':' in header[-1] and not header[-1].strip().endswith(':'):
+        # clean up if there's garbage after the colon
+        header[-1] = header[-1].split(':')[0] + ':\n'
 
     # Read the new candidates JSON
     with open(candidates_json_path, 'r', encoding='utf-8') as f:
         candidates_data = json.load(f)
         
     candidates_str = json.dumps(candidates_data, indent=2, ensure_ascii=False)
-    new_lines.append(candidates_str)
     
-    # Close the object structure
-    new_lines.append('\n};')
-
     # Write the updated data.js
     with open(data_js_path, 'w', encoding='utf-8') as f:
-        f.writelines(new_lines)
+        f.writelines(header)
+        f.write(candidates_str)
+        f.write('\n};')
     
-    print("Successfully updated data.js with 58 candidates.")
+    print(f"Successfully updated data.js with {len(candidates_data)} candidates.")
 
 if __name__ == "__main__":
     update_data_js()

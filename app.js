@@ -1,5 +1,5 @@
 // ====================================================================
-// WAHL-ERA APP LOGIC
+// WahlEra APP LOGIC
 // ====================================================================
 
 (function () {
@@ -640,14 +640,18 @@
     const rows = limitedList.map((r, i) => {
       const pct = r.matchPercent ?? 0;
       const party = candidateParty(r.candidate);
+      const color = party ? party.color : '#9CA3AF';
       const delay = (i * 0.02).toFixed(2);
       return `
         <div class="result-row-compact animate-fade-in" data-candidate-id="${r.candidate.id}" style="animation-delay:${delay}s">
           <span style="font-size:0.8rem;font-weight:800;color:var(--text-muted);text-align:center">${i + 1}</span>
-          <span class="candidate-dot" style="background:${r.candidate.color};width:0.85rem;height:0.85rem;box-shadow:0 0 8px ${r.candidate.color}66"></span>
+          <span class="candidate-dot" style="background:${color};width:0.85rem;height:0.85rem;box-shadow:0 0 8px ${color}66"></span>
           <div style="overflow:hidden">
             <div style="font-weight:700;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.candidate.name}</div>
             ${party ? `<div style="font-size:0.65rem;color:${party.color};font-weight:800;text-transform:uppercase">${party.name}</div>` : ''}
+          </div>
+          <div class="result-bar-track">
+            <div class="result-bar-fill" style="width:0%;background:linear-gradient(90deg,${color},${color}cc)" data-pct="${pct}"></div>
           </div>
           <div style="font-weight:900;font-size:1.1rem;text-align:right">${pct}%</div>
           <button class="btn-icon" style="padding:0.3rem" title="Steckbrief">👤</button>
@@ -678,7 +682,7 @@
           <div class="result-row" data-candidate-id="${c.id}" style="padding:0.5rem 0.75rem;gap:0.5rem;margin-left:1rem">
             <span class="candidate-dot" style="background:${c.color};width:0.55rem;height:0.55rem"></span>
             <span style="font-size:0.82rem;color:var(--text);flex:0 0 auto;min-width:90px">${c.name}</span>
-            <div class="flex-1 result-bar-track" style="height:0.875rem">
+            <div class="result-bar-track">
               <div class="result-bar-fill" style="width:0%;background:${c.color}" data-pct="${mpct}"></div>
             </div>
             <span style="font-size:0.82rem;font-weight:700;color:var(--text)">${mlabel}</span>
@@ -695,7 +699,7 @@
               <div style="font-weight:800;font-size:1.05rem;color:var(--text);letter-spacing:-0.02em">${pr.party.name}</div>
               ${cohLabel ? `<div class="${cohClass}" style="font-size:0.75rem;font-weight:700">${cohLabel}</div>` : ''}
             </div>
-            <div class="flex-1 result-bar-track">
+            <div class="result-bar-track">
               <div class="result-bar-fill" style="width:0%;background:linear-gradient(90deg,${pr.party.color},${pr.party.color}cc)" data-pct="${pct}"></div>
             </div>
             <span style="font-size:1.1rem;font-weight:900;color:var(--text);min-width:3.5rem;text-align:right">${label}</span>
@@ -712,21 +716,20 @@
     const cats = Object.keys(state.categoryResults);
     if (!cats.length) return '';
     const cands = candidates();
-    const headers = cands.map(c => `<th title="${c.name}">
-      <span class="candidate-dot" style="background:${c.color}"></span>${c.name.split(' ')[0]}
-    </th>`).join('');
 
-    const rows = cats.map(cat => {
-      const cells = cands.map(c => {
+    const headers = cats.map(cat => `<th>${cat}</th>`).join('');
+
+    const rows = cands.map(c => {
+      const cells = cats.map(cat => {
         const pct = state.categoryResults[cat][c.id];
         if (pct == null) return `<td class="cat-null">–</td>`;
         const cls = pct >= 70 ? 'cat-high' : pct >= 40 ? 'cat-mid' : 'cat-low';
         return `<td class="${cls}">${pct}%</td>`;
       }).join('');
-      return `<tr><td class="cat-name">${cat}</td>${cells}</tr>`;
+      return `<tr><td class="cat-name"><span class="candidate-dot" style="background:${c.color}"></span>${c.name}</td>${cells}</tr>`;
     }).join('');
 
-    return `<table class="cat-table"><thead><tr><th style="text-align:left">Thema</th>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
+    return `<table class="cat-table"><thead><tr><th style="text-align:left">Kandidat:in</th>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   // ── Screen: Compare ────────────────────────────────────────────────
@@ -737,6 +740,7 @@
     const match = state.results.find(r => r.candidate.id === candidateId);
     const matchPct = match ? match.matchPercent : calculateMatch(candidate);
     const party = candidateParty(candidate);
+    const color = party ? party.color : '#9CA3AF';
 
     const rows = questions().map(q => {
       const u = state.answers[q.id];
@@ -745,8 +749,8 @@
       const skipped = u == null;
       const diff = skipped ? null : Math.abs(u - c);
 
-      const uBarW = skipped ? 0 : Math.round((u / 5) * 100);
-      const cBarW = Math.round((c / 5) * 100);
+      const uBarW = skipped ? 0 : Math.round(((u - 1) / 4) * 100);
+      const cBarW = Math.round(((c - 1) / 4) * 100);
 
       const matchBadge = skipped
         ? `<span class="badge" style="background:var(--surface-2);color:var(--text-muted)">übersprungen</span>`
@@ -760,56 +764,56 @@
         ? `<span class="badge badge-warning">×2 gewichtet</span>` : '';
 
       const poleLine = q.poleA
-        ? `<div style="font-size:0.7rem;color:var(--text-light);margin-bottom:0.5rem">
-             <span style="color:var(--accent)">◀ ${q.poleA.substring(0, 45)}…</span>
+        ? `<div style="font-size:0.75rem;color:var(--text-light);margin-bottom:0.75rem;text-align:center;font-weight:600">
+             <span style="color:var(--accent)">◀ ${q.poleA}</span>
              &nbsp;/&nbsp;
-             <span style="color:var(--success)">${q.poleB.substring(0, 45)}… ▶</span>
+             <span style="color:var(--success)">${q.poleB} ▶</span>
            </div>` : '';
 
       return `
-        <div class="card" style="padding:1rem;margin-bottom:0.75rem">
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.5rem">
+        <div class="card" style="padding:1.5rem;margin-bottom:1rem">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.75rem">
             ${q.category ? `<span class="badge badge-accent">${q.category}</span>` : ''}
             <div style="display:flex;gap:0.35rem;flex-wrap:wrap;margin-left:auto">${matchBadge}${weightBadge}</div>
           </div>
           ${poleLine}
-          <div style="display:flex;flex-direction:column;gap:0.5rem">
-            <div style="display:flex;align-items:center;gap:0.5rem">
-              <span style="font-size:0.75rem;color:var(--text-muted);width:3rem;flex-shrink:0">Du:</span>
+          <div style="display:flex;flex-direction:column;gap:0.75rem">
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <span style="font-size:0.8rem;color:var(--text-muted);width:3.5rem;flex-shrink:0">Du:</span>
               ${skipped
-                ? `<span style="font-size:0.78rem;color:var(--text-light);font-style:italic">Übersprungen</span>`
-                : `<div style="flex:1;height:8px;background:var(--surface-2);border-radius:9999px;overflow:hidden">
+                ? `<span style="font-size:0.85rem;color:var(--text-light);font-style:italic">Übersprungen</span>`
+                : `<div style="flex:1;height:10px;background:var(--surface-2);border-radius:9999px;overflow:hidden">
                      <div style="height:100%;width:${uBarW}%;background:var(--accent);border-radius:9999px"></div>
                    </div>
-                   <span style="font-size:0.78rem;font-weight:700;color:var(--text);min-width:3.5rem;text-align:right">${u} ${u <= 2 ? '◀ A' : u >= 4 ? 'B ▶' : '○'}</span>`
+                   <span style="font-size:0.85rem;font-weight:700;color:var(--text);min-width:3.5rem;text-align:right">${u} ${u <= 2 ? '◀ A' : u >= 4 ? 'B ▶' : '○'}</span>`
               }
             </div>
-            <div style="display:flex;align-items:center;gap:0.5rem">
-              <span style="font-size:0.75rem;font-weight:600;width:3rem;flex-shrink:0;color:${candidate.color}">${candidate.name.split(' ')[0]}:</span>
-              <div style="flex:1;height:8px;background:var(--surface-2);border-radius:9999px;overflow:hidden">
-                <div style="height:100%;width:${cBarW}%;background:${candidate.color};border-radius:9999px"></div>
+            <div style="display:flex;align-items:center;gap:0.75rem">
+              <span style="font-size:0.8rem;font-weight:700;width:3.5rem;flex-shrink:0;color:${color}">${candidate.name.split(' ')[0]}:</span>
+              <div style="flex:1;height:10px;background:var(--surface-2);border-radius:9999px;overflow:hidden">
+                <div style="height:100%;width:${cBarW}%;background:${color};border-radius:9999px"></div>
               </div>
-              <span style="font-size:0.78rem;font-weight:700;color:var(--text);min-width:3.5rem;text-align:right">${c} ${c <= 2 ? '◀ A' : c >= 4 ? 'B ▶' : '○'}</span>
+              <span style="font-size:0.85rem;font-weight:700;color:var(--text);min-width:3.5rem;text-align:right">${c} ${c <= 2 ? '◀ A' : c >= 4 ? 'B ▶' : '○'}</span>
             </div>
           </div>
           ${candidate.statements?.[q.id]
-            ? `<p style="margin-top:0.6rem;font-size:0.78rem;color:var(--text-muted);font-style:italic;border-left:3px solid ${candidate.color};padding-left:0.6rem">${candidate.statements[q.id]}</p>`
+            ? `<p style="margin-top:1rem;font-size:0.85rem;color:var(--text-muted);font-style:italic;border-left:4px solid ${color};padding-left:0.8rem;line-height:1.4">${candidate.statements[q.id]}</p>`
             : ''}
         </div>`;
     }).join('');
 
     section.innerHTML = `
       <div class="screen-inner">
-        <button id="btn-back-results" class="btn btn-ghost" style="margin-bottom:1rem;font-size:0.85rem">← Zurück zu Ergebnissen</button>
-        <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.5rem;flex-wrap:wrap">
-          <span class="candidate-dot" style="background:${candidate.color};width:1rem;height:1rem"></span>
-          <h1 style="font-size:1.4rem;font-weight:800;color:var(--text)">
-            Du vs. <span style="color:${candidate.color}">${candidate.name}</span>
+        <button id="btn-back-results" class="btn btn-ghost" style="margin-bottom:1.5rem;font-size:0.9rem">← Zurück zu Ergebnissen</button>
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:2rem;flex-wrap:wrap">
+          <span class="candidate-dot" style="background:${color};width:1.25rem;height:1.25rem"></span>
+          <h1 style="font-size:1.8rem;font-weight:900;color:var(--text);margin:0">
+            Du vs. <span style="color:${color}">${candidate.name}</span>
           </h1>
           ${party ? partyBadgeHtml(candidate) : ''}
-          ${matchPct != null ? `<span style="margin-left:auto;font-size:1.6rem;font-weight:900;color:${candidate.color}">${matchPct}%</span>` : ''}
+          ${matchPct != null ? `<span style="margin-left:auto;font-size:2rem;font-weight:900;color:${color}">${matchPct}%</span>` : ''}
         </div>
-        ${rows}
+        <div>${rows}</div>
       </div>`;
 
     section.querySelector('#btn-back-results').addEventListener('click', () => showScreen('results'));
@@ -889,165 +893,93 @@
 
   // ── Screen: Overview ───────────────────────────────────────────────
   function renderOverview() {
-    const section = document.getElementById('screen-overview');
-    const cands = candidates();
-    const qs = questions();
+    let ovIdx = 0;
 
-    const blocks = qs.map((q, qi) => {
-      // Grouping: { [value]: { [partyId]: [candidate, ...] } }
-      const groups = {};
-      cands.forEach(c => {
-        const v = c.answers[q.id] ?? 3;
-        const pId = c.party || 'independent';
-        if (!groups[v]) groups[v] = {};
-        if (!groups[v][pId]) groups[v][pId] = [];
-        groups[v][pId].push(c);
-      });
-
-      const figures = [];
-      Object.keys(groups).forEach(v => {
-        const val = parseInt(v);
-        const partiesInVal = groups[v];
-        const pct = ((val - 1) / 4) * 100;
-
-        let partyIdx = 0;
-        Object.keys(partiesInVal).forEach(pId => {
-          const members = partiesInVal[pId];
-          const party = partyById(pId);
-          const color = party ? party.color : '#666';
-          
-          // Stack logic
-          const yOffset = partyIdx * 0.45; 
-          const isGroup = members.length > 1;
-          const label = isGroup ? members.length : '';
-          const char = isGroup ? (party ? party.name[0] : 'G') : members[0].name[0];
-
-          figures.push(`
-            <div class="fig-swarm-item" 
-                 style="left:${pct}%; bottom:${yOffset}rem; z-index:${10 + partyIdx}"
-                 onclick="window.WAHLERA_APP.showGroupDetails('${q.id}', '${pId}', ${val})">
-              <div class="fig-swarm-icon" style="background:${color}; border-color:${color}">${char}</div>
-              ${isGroup ? `<div class="fig-swarm-badge">${label}</div>` : ''}
-            </div>
-          `);
-          partyIdx++;
-        });
-      });
-
+    function renderOvQuestion() {
+      const qs = questions();
+      const q = qs[ovIdx];
+      const cands = candidates();
       const userAnswer = state.answers[q.id];
-      const userPct = userAnswer != null ? ((userAnswer - 1) / 4) * 100 : null;
-      const userIndicator = userPct !== null ? `
-        <div class="user-line" style="left:${userPct}%">
-          <div class="user-indicator">DU</div>
-        </div>
-      ` : '';
 
-      return `
-        <div class="ov-block-modern animate-fade-in" style="animation-delay:${qi * 0.05}s">
-          <div class="ov-question-header">
+      const candidateCardsHtml = cands.map(c => {
+        const val = c.answers[q.id] ?? 3;
+        const barPct = Math.round(((val - 1) / 4) * 100);
+        const party = candidateParty(c);
+        const color = party ? party.color : '#9CA3AF';
+        const statement = c.statements?.[q.id];
+        const dirLabel = val <= 2 ? '◀ A' : val >= 4 ? 'B ▶' : '○';
+        return `
+          <div class="ov-cand-card card" style="border-left:4px solid ${color}">
+            <div class="ov-cand-header">
+              <span class="candidate-dot" style="background:${color}"></span>
+              <span class="ov-cand-name">${c.name}</span>
+              ${partyBadgeHtml(c)}
+            </div>
+            <div class="ov-cand-bar-row">
+              <span style="font-size:0.75rem;color:var(--text-muted);width:2.5rem;flex-shrink:0">${dirLabel}</span>
+              <div class="ov-cand-bar-track">
+                <div class="ov-cand-bar-fill" style="width:${barPct}%;background:${color}"></div>
+              </div>
+              <span style="font-size:0.85rem;font-weight:700;color:${color};min-width:1rem;text-align:right">${val}</span>
+            </div>
+            ${statement
+              ? `<p class="ov-cand-statement">${statement}</p>`
+              : `<p class="ov-cand-no-statement">Keine Begründung angegeben.</p>`}
+          </div>`;
+      }).join('');
+
+      const section = document.getElementById('screen-overview');
+      section.innerHTML = `
+        <div class="screen-inner slide-in-up">
+          <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;flex-wrap:wrap;gap:1rem">
             <div>
-              <div style="font-size:0.75rem; font-weight:800; color:var(--accent); text-transform:uppercase; margin-bottom:0.25rem">${q.category || 'Allgemein'}</div>
-              <div class="ov-question-text">${q.text || ''}</div>
+              <h1 style="font-size:2rem;font-weight:900;margin:0">Alle Einzelantworten</h1>
+              <p class="text-muted">Vergleiche die Positionen aller Kandidat:innen im Detail.</p>
+            </div>
+            <button id="btn-ov-back-results" class="btn btn-primary">← Zurück zur Übersicht</button>
+          </header>
+
+          <div class="ov-nav-bar">
+            <button id="btn-ov-prev" class="btn btn-ghost" ${ovIdx === 0 ? 'disabled' : ''}>← Zurück</button>
+            <div class="ov-nav-counter">
+              <span class="badge badge-accent">${q.category || 'Allgemein'}</span>
+              <span>Frage ${ovIdx + 1} von ${qs.length}</span>
+            </div>
+            <button id="btn-ov-next" class="btn btn-ghost" ${ovIdx === qs.length - 1 ? 'disabled' : ''}>Weiter →</button>
+          </div>
+
+          <div class="card ov-question-card" style="padding:2rem;margin-bottom:2rem">
+            <div class="ov-poles-row">
+              <span style="color:var(--accent);font-weight:700">◀ ${q.poleA || ''}</span>
+              <div class="ov-user-dots">
+                ${[1,2,3,4,5].map(v => {
+                  const active = userAnswer === v;
+                  const side = v <= 2 ? 'var(--accent)' : v >= 4 ? 'var(--success)' : 'var(--text-muted)';
+                  return `<div class="ov-user-dot${active ? ' ov-user-dot-active' : ''}" style="${active ? `background:${side};box-shadow:0 0 8px ${side}` : ''}"></div>`;
+                }).join('')}
+              </div>
+              <span style="color:var(--success);font-weight:700">${q.poleB || ''} ▶</span>
             </div>
           </div>
-          
-          <div class="ov-scale-modern">
-            <div class="ov-pole-label-modern ov-pole-a">${q.poleA || ''}</div>
-            <div class="ov-pole-label-modern ov-pole-b">${q.poleB || ''}</div>
-            
-            <div class="ov-axis-line"></div>
-            <div class="ov-axis-labels">
-              <span>Starke Ablehnung</span>
-              <span>Neutral</span>
-              <span>Starke Zustimmung</span>
-            </div>
-            
-            <div class="ov-figures-container">
-              ${userIndicator}
-              ${figures.join('')}
-            </div>
-          </div>
-        </div>
-      `;
-    }).join('');
 
-    section.innerHTML = `
-      <div class="screen-inner slide-in-up">
-        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4rem">
-          <div>
-            <h1 style="font-size:2.5rem; font-weight:900; margin:0">Alle Einzelantworten</h1>
-            <p class="text-muted">Vergleiche die Positionen aller Kandidat:innen im Detail.</p>
-          </div>
-          <button id="btn-ov-back-results" class="btn btn-primary">← Zurück zur Übersicht</button>
-        </header>
-        <div style="max-width:70rem; margin:0 auto">${blocks}</div>
-      </div>
-    `;
+          <div class="ov-candidates-grid">${candidateCardsHtml}</div>
+        </div>`;
 
-    section.querySelector('#btn-ov-back-results')?.addEventListener('click', () => {
-      renderResults(); showScreen('results');
-    });
-  }
-
-  function attachOverviewListeners(section, qs) {
-    // Back to results
-    section.querySelector('#btn-ov-back-results')?.addEventListener('click', () => {
-      renderResults();
-      showScreen('results');
-    });
-
-    // Group clicks -> show popup
-    section.querySelectorAll('.fig-item-group').forEach(group => {
-      group.addEventListener('click', e => {
-        e.stopPropagation();
-        const dataStr = group.querySelector('.group-data').textContent;
-        const members = JSON.parse(dataStr);
-        showGroupPopup(group, members);
+      section.querySelector('#btn-ov-back-results').addEventListener('click', () => {
+        renderResults(); showScreen('results');
       });
-    });
-
-    // User figure click → inline answer editor
-    section.querySelectorAll('.fig-item[data-user]').forEach(fig => {
-      fig.addEventListener('click', e => {
-        e.stopPropagation();
-        const qi = parseInt(fig.dataset.qi);
-        const q = qs[qi];
-        openInlineEditor(section, qi, q);
+      section.querySelector('#btn-ov-prev')?.addEventListener('click', () => {
+        if (ovIdx > 0) { ovIdx--; renderOvQuestion(); }
       });
-    });
+      section.querySelector('#btn-ov-next')?.addEventListener('click', () => {
+        if (ovIdx < qs.length - 1) { ovIdx++; renderOvQuestion(); }
+      });
+    }
 
-    // Click elsewhere → close all popups
-    section.addEventListener('click', () => {
-      section.querySelectorAll('.group-popup').forEach(p => p.remove());
-    });
+    renderOvQuestion();
   }
 
-  function showGroupPopup(anchor, members) {
-    // Remove existing popups
-    document.querySelectorAll('.group-popup').forEach(p => p.remove());
-
-    const popup = document.createElement('div');
-    popup.className = 'group-popup';
-    
-    const listHtml = members.map(m => `
-      <div class="group-member-item" onclick="window.WAHLERA_APP.navigateToCandidate('${m.id}')">
-        <span class="candidate-dot" style="background:${m.color}"></span>
-        <div style="flex:1">
-          <div style="font-size:0.8rem;font-weight:700;color:var(--text)">${m.name}</div>
-          ${m.statement ? `<div style="font-size:0.7rem;color:var(--text-muted);font-style:italic;margin-top:2px">"${m.statement.substring(0,60)}${m.statement.length>60?'...':''}"</div>` : ''}
-        </div>
-      </div>
-    `).join('');
-
-    popup.innerHTML = `
-      <div class="group-popup-header">Kandidat:innen (${members.length})</div>
-      <div class="group-popup-list">${listHtml}</div>
-    `;
-
-    anchor.appendChild(popup);
-  }
-
-  // Exposure for popup click
+  // Exposure for inline onclick handlers
   window.WAHLERA_APP = {
     navigateToCandidate: (id) => {
       renderCompare(id);
@@ -1059,67 +991,6 @@
       showScreen('profile');
     }
   };
-
-  function openInlineEditor(section, qi, q) {
-    // Remove any existing editors
-    section.querySelectorAll('.ov-inline-editor').forEach(e => e.remove());
-
-    const block = section.querySelector(`#ov-block-${qi}`);
-    const scaleCol = block?.querySelector('.ov-scale-col');
-    if (!scaleCol) return;
-
-    const currentVal = state.answers[q.id] ?? null;
-
-    const editor = document.createElement('div');
-    editor.className = 'ov-inline-editor card';
-    editor.innerHTML = `
-      <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;font-weight:600">
-        Deine Antwort ändern:
-      </p>
-      <div class="ov-editor-buttons">
-        ${[1,2,3,4,5].map(v => {
-          const sel = v === currentVal ? ' selected' : '';
-          const side = v <= 2 ? ' vote-side-a' : v >= 4 ? ' vote-side-b' : ' vote-neutral';
-          return `<button class="vote-btn${sel}${side}" data-edit-val="${v}">${v}</button>`;
-        }).join('')}
-      </div>
-      <div style="display:flex;gap:0.5rem;margin-top:0.75rem">
-        <button class="btn btn-ghost ov-editor-skip" style="font-size:0.78rem;padding:0.3rem 0.75rem">Überspringen</button>
-        <button class="btn btn-ghost ov-editor-cancel" style="font-size:0.78rem;padding:0.3rem 0.75rem">Abbrechen</button>
-      </div>`;
-
-    scaleCol.appendChild(editor);
-    editor.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-    editor.querySelectorAll('[data-edit-val]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const newVal = parseInt(btn.dataset.editVal);
-        state.answers[q.id] = newVal;
-        saveToStorage();
-        computeAllResults();
-        computePartyResults();
-        computeCategoryResults();
-        renderResults();
-        showScreen('results');
-        showToast('Antwort geändert — Ergebnisse aktualisiert');
-      });
-    });
-
-    editor.querySelector('.ov-editor-skip')?.addEventListener('click', () => {
-      state.answers[q.id] = null;
-      saveToStorage();
-      computeAllResults();
-      computePartyResults();
-      computeCategoryResults();
-      renderResults();
-      showScreen('results');
-      showToast('Frage übersprungen — Ergebnisse aktualisiert');
-    });
-
-    editor.querySelector('.ov-editor-cancel')?.addEventListener('click', () => {
-      editor.remove();
-    });
-  }
 
   // ── Start screen resume banner ─────────────────────────────────────
   function showResumeBanner(saved) {
@@ -1165,8 +1036,8 @@
     document.getElementById('btn-dark-toggle')?.addEventListener('click', toggleDarkMode);
 
     // Meta
-    document.title = data.meta.title || 'Wahl-Era';
-    document.querySelectorAll('.meta-title').forEach(el => { el.textContent = data.meta.title || 'Wahl-Era'; });
+    document.title = data.meta.title || 'WahlEra';
+    document.querySelectorAll('.meta-title').forEach(el => { el.textContent = data.meta.title || 'WahlEra'; });
     document.querySelectorAll('.meta-election').forEach(el => { el.textContent = data.meta.election || ''; });
     document.querySelectorAll('.meta-description').forEach(el => { el.textContent = data.meta.description || ''; });
 
