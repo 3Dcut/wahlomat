@@ -180,7 +180,7 @@ window.WAHLERA_DATA = {
       category: "Nationale Einstellung",
       poleA: "Bündnisse sollten vor allem auf einer gemeinsamen Kultur basieren.",
       poleB: "Bündnisse sollten vor allem strategische Ziele verfolgen.",
-      hint: "Venezuela oder Niederlande?"
+      hint: "USA oder Niederlande?"
     },
     {
       id: "q14",
