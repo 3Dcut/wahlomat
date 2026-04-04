@@ -3,7 +3,7 @@ import json
 import os
 
 # Configuration
-CSV_FILE = 'Wahl-O-Mat_ Kandidatenpositionierung (Antworten) - Formularantworten 1.csv'
+CSV_FILE = 'Wahl-O-Mat_ Kandidatenpositionierung (Antworten) - Formularantworten 1 (2).csv'
 OUTPUT_FILE = 'candidates_data.json'
 
 PARTY_MAPPING = {
