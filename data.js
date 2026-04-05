@@ -2283,7 +2283,7 @@ window.WAHLERA_DATA = {
   },
   {
     "id": "k-31",
-    "name": "MarcoEule",
+    "name": "Marco",
     "party": "wumms",
     "inCongress": false,
     "intro": "Fokus über Zirkus: Sacharbeit statt Selbstdarstellung",
