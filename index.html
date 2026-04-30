@@ -13,7 +13,21 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+  <!-- ── DEV BLOCKER ────────────────────────────────────────────────── -->
+  <div id="dev-blocker" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #080a0c; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div style="text-align: center; max-width: 400px; padding: 2rem; background: rgba(15, 23, 36, 0.7); border: 1.5px solid rgba(255, 255, 255, 0.08); border-radius: 1.25rem; box-shadow: 0 12px 32px rgba(0,0,0,0.4); backdrop-filter: blur(20px);">
+      <h1 style="font-size: 2rem; margin-bottom: 1rem; color: #f8fafc; font-weight: 900;">Umbauarbeiten</h1>
+      <p style="color: #94a3b8; margin-bottom: 2rem;">Neue Wahlen, neue Fragen.<br>Diese Seite ist vorübergehend blockiert.</p>
+      <input type="password" id="dev-password" placeholder="Code eingeben" style="padding: 0.75rem 1rem; border-radius: 0.75rem; border: 1.5px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.3); color: #fff; width: 100%; text-align: center; font-size: 1.2rem; outline: none; transition: border-color 0.2s;" onfocus="this.style.borderColor='#3b82f6'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'" />
+    </div>
+    <script>
+      document.getElementById('dev-password').addEventListener('input', function(e) {
+        if (e.target.value === '555') {
+          document.getElementById('dev-blocker').style.display = 'none';
+        }
+      });
+    </script>
+  </div>
   <!-- ── Navigation ────────────────────────────────────────────────── -->
   <nav class="wom-nav">
     <div class="wom-nav-inner">
