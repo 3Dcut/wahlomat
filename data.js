@@ -668,7 +668,7 @@ window.WAHLERA_DATA = {
   {
     "id": "k-15",
     "name": "Severin_von_Koeln",
-    "party": "azbaggr",
+    "party": "azbarbeit",
     "inCongress": false,
     "intro": "Kirchenmann auf Politiker abwegen",
     "importantQuestions": [
