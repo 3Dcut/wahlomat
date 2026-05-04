@@ -114,6 +114,16 @@
     if (!target) return;
     target.classList.remove('hidden');
     requestAnimationFrame(() => requestAnimationFrame(() => target.classList.add('visible')));
+    
+    const spionageToggleBtn = document.getElementById('btn-toggle-spionage');
+    if (spionageToggleBtn) {
+      if (['results', 'compare', 'overview', 'profile'].includes(id)) {
+        spionageToggleBtn.style.display = '';
+      } else {
+        spionageToggleBtn.style.display = 'none';
+      }
+    }
+
     if (pushState) history.pushState({ screen: id }, '', '#' + id);
     window.scrollTo(0, 0);
   }
