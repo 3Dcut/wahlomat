@@ -197,6 +197,9 @@ def process_csv():
 
     candidates = []
 
+    # Nur Einträge ab diesem Datum importieren (neue Wahlrunde)
+    CUTOFF_DATE = "03.05.2026"
+
     with open(CSV_FILE, mode='r', encoding='utf-8') as f:
         reader = csv.reader(f)
         header = next(reader)
@@ -213,6 +216,18 @@ def process_csv():
             if not username:
                 continue
 
+            # Zeitstempel-Filter: nur neue Runde (ab Mai 2026)
+            timestamp = row[0].strip()
+            try:
+                day, month, year_rest = timestamp.split(".")
+                year = year_rest.split(" ")[0]
+                row_date = f"{day}.{month}.{year}"
+                cut_day, cut_month, cut_year = CUTOFF_DATE.split(".")
+                if (int(year), int(month), int(day)) < (int(cut_year), int(cut_month), int(cut_day)):
+                    continue
+            except (ValueError, IndexError):
+                continue
+
             intro = row[2].strip()
             raw_party = row[3].strip()
             in_congress = "Ja" in row[4]
@@ -220,7 +235,7 @@ def process_csv():
             party_id = map_party(raw_party, username)
 
             candidate = {
-                "id": f"k-{i}",
+                "id": f"k-{len(candidates)}",
                 "name": username,
                 "party": party_id,
                 "inCongress": in_congress,
