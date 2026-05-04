@@ -31,7 +31,7 @@
   --radius-md:    0.75rem;
 }
 
-/* Light Mode Overrides (if needed, but game look is dark) */
+/* Light Mode Overrides */
 [data-theme="light"] {
   --bg:           #f3f4f6;
   --surface:      rgba(255, 255, 255, 0.85);
@@ -41,10 +41,13 @@
   --border-focus: #3b82f6;
   --text:         #111827;
   --text-muted:   #4b5563;
-  --text-light:   #9ca3af;
+  --text-light:   #6b7280;
   --accent:       #3b82f6;
   --accent-light: #eff6ff;
   --nav-bg:       rgba(243, 244, 246, 0.8);
+  --shadow-sm:    0 2px 4px rgba(0,0,0,0.08);
+  --shadow-md:    0 12px 32px rgba(0,0,0,0.1);
+  --shadow-lg:    0 24px 64px rgba(0,0,0,0.15);
 }
 
 /* ── Base ────────────────────────────────────────────────────────── */
@@ -189,10 +192,16 @@ body {
   color: var(--text-muted);
   border-color: var(--border);
 }
+[data-theme="light"] .btn-ghost {
+  background: rgba(0,0,0,0.03);
+}
 .btn-ghost:hover {
   background: rgba(255,255,255,0.1);
   color: var(--text);
   border-color: var(--text-muted);
+}
+[data-theme="light"] .btn-ghost:hover {
+  background: rgba(0,0,0,0.06);
 }
 .btn-icon {
   padding: 0.65rem;
@@ -206,10 +215,16 @@ body {
   justify-content: center;
   transition: all 0.2s;
 }
+[data-theme="light"] .btn-icon {
+  background: rgba(0,0,0,0.03);
+}
 .btn-icon:hover {
   background: rgba(255,255,255,0.12);
   color: var(--text);
   transform: scale(1.1);
+}
+[data-theme="light"] .btn-icon:hover {
+  background: rgba(0,0,0,0.08);
 }
 
 /* ── Vote buttons grid ───────────────────────────────────────────── */
@@ -291,6 +306,10 @@ body {
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.05);
 }
+[data-theme="light"] .progress-track {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.08);
+}
 .progress-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
@@ -361,6 +380,11 @@ body {
   width: 12rem;
   flex-shrink: 0;
 }
+[data-theme="light"] .result-bar-track {
+  background: rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.08);
+}
 @media (max-width: 1100px) {
   .result-bar-track { width: 8rem; }
 }
@@ -384,10 +408,16 @@ body {
   border: 1.5px solid transparent;
   background: rgba(255, 255, 255, 0.02);
 }
+[data-theme="light"] .result-row {
+  background: rgba(0, 0, 0, 0.01);
+}
 .result-row:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: var(--border-focus);
   transform: translateX(8px) scale(1.02);
+}
+[data-theme="light"] .result-row:hover {
+  background: rgba(0, 0, 0, 0.04);
 }
 
 /* Stagger animation for result rows */
@@ -657,6 +687,9 @@ body {
   display: flex;
   flex-direction: column;
 }
+[data-theme="light"] .pole-card {
+  background: rgba(0, 0, 0, 0.02);
+}
 .pole-card.pole-a {
   border-left: 6px solid var(--accent);
 }
@@ -667,6 +700,9 @@ body {
 .pole-card.highlighted {
   background: rgba(255, 255, 255, 0.08);
   transform: scale(1.02);
+}
+[data-theme="light"] .pole-card.highlighted {
+  background: rgba(0, 0, 0, 0.04);
 }
 .pole-card.pole-a.highlighted {
   border-color: var(--accent);
@@ -679,6 +715,9 @@ body {
 
 .pole-card.glow-strong {
   background: rgba(255, 255, 255, 0.12);
+}
+[data-theme="light"] .pole-card.glow-strong {
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .pole-label {
@@ -1488,6 +1527,12 @@ body {
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+[data-theme="light"] .hero-match-pct {
+  background: linear-gradient(180deg, #1e293b 30%, var(--card-color) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 .hero-match-label {
   font-size: 0.75rem;
   font-weight: 800;
@@ -1526,6 +1571,7 @@ body {
   border: 1px solid var(--border);
   margin-bottom: 0.5rem;
   transition: all 0.2s;
+  color: var(--text);
 }
 .result-row-compact:hover {
   background: var(--surface-2);

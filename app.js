@@ -22,6 +22,12 @@
   // ── Data accessors ─────────────────────────────────────────────────
   const DATA       = () => window.WAHLERA_DATA;
   const questions  = () => DATA().questions;
+  const scoredQuestions = () => {
+    const qs = questions();
+    const toggle = document.getElementById('toggle-spionage');
+    const includeSpionage = toggle ? toggle.checked : true;
+    return includeSpionage ? qs : qs.filter(q => q.id !== 'q09');
+  };
   const candidates = () => DATA().candidates;
   const parties    = () => DATA().parties || [];
 
@@ -123,7 +129,7 @@
   // ── Score calculation ──────────────────────────────────────────────
   function calculateMatch(candidate) {
     let weightedSum = 0, totalWeight = 0;
-    for (const q of questions()) {
+    for (const q of scoredQuestions()) {
       const u = state.answers[q.id];
       if (u == null) continue;
       const c = candidate.answers[q.id] ?? 3;
@@ -162,7 +168,7 @@
           for (let j = i + 1; j < members.length; j++) {
             const c1 = members[i], c2 = members[j];
             let qSum = 0, qCount = 0;
-            for (const q of questions()) {
+            for (const q of scoredQuestions()) {
               const a1 = c1.answers[q.id] ?? 3;
               const a2 = c2.answers[q.id] ?? 3;
               qSum += 1 - Math.abs(a1 - a2) / 4;
@@ -185,11 +191,12 @@
   }
 
   function computeCategoryResults() {
-    const cats = [...new Set(questions().map(q => q.category).filter(Boolean))];
+    const sqs = scoredQuestions();
+    const cats = [...new Set(sqs.map(q => q.category).filter(Boolean))];
     state.categoryResults = {};
     for (const cat of cats) {
       state.categoryResults[cat] = {};
-      const catQs = questions().filter(q => q.category === cat);
+      const catQs = sqs.filter(q => q.category === cat);
       for (const cand of candidates()) {
         let wSum = 0, wTotal = 0;
         for (const q of catQs) {
@@ -622,6 +629,27 @@
       section.querySelector('#col-parties').classList.toggle('mobile-hidden', target !== 'parties');
     }));
     if (window.innerWidth <= 840) section.querySelector('.results-mobile-tabs').style.display = 'flex';
+
+    // Spionage toggle logic for dynamic recalculation
+    const spionageToggle = document.getElementById('toggle-spionage');
+    if (spionageToggle && !spionageToggle.dataset.listenerAttached) {
+      spionageToggle.dataset.listenerAttached = 'true';
+      spionageToggle.addEventListener('change', () => {
+        if (document.getElementById('screen-results').classList.contains('visible')) {
+          computeAllResults();
+          computePartyResults();
+          computeCategoryResults();
+          renderResults();
+        } else if (document.getElementById('screen-compare').classList.contains('visible')) {
+          computeAllResults();
+          computePartyResults();
+          computeCategoryResults();
+          // We need to re-render compare to reflect match percent changes
+          const activeCandidateId = document.querySelector('.result-row-compact, .result-row')?.dataset?.candidateId || state.results[0]?.candidate?.id;
+          if (activeCandidateId) renderCompare(activeCandidateId);
+        }
+      });
+    }
   }
 
   function renderCandidateRows() {
