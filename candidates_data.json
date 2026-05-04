@@ -1186,5 +1186,91 @@
       "q03": "Eine gute Gelegenheit sollten wir nutzen, aber zu viele Proxys schaden auch der Community im Land.",
       "q04": "Wenn wir als Eco-Nation agieren, können wir mit einer Spende viel mehr erreichen als an der Waffe, aber der Blutdurst bleibt bei einigen ungestillt."
     }
+  },
+  {
+    "id": "k-34",
+    "name": "Der_Imperator",
+    "party": "parteilos",
+    "inCongress": false,
+    "intro": "Man kennt mich.",
+    "importantQuestions": [
+      "q02",
+      "q08"
+    ],
+    "answers": {
+      "q01": 3,
+      "q02": 5,
+      "q07": 1,
+      "q08": 1,
+      "q05": 3,
+      "q06": 3,
+      "q09": 4,
+      "q10": 4,
+      "q03": 1,
+      "q04": 1
+    },
+    "statements": {
+      "q01": "Ich denke man muss schauen wie sich Venezuela in Zukunft entwickelt und ob sie aus der Vergangenheit gelernt haben.",
+      "q02": "Vergrößert das Imperium!!!",
+      "q08": "Gebt mir mein galaktisches Imperium",
+      "q10": "Bin durchaus (zu)viel anwesend aber das RL geht nunmal vor"
+    }
+  },
+  {
+    "id": "k-35",
+    "name": "Luui",
+    "party": "azbarbeit",
+    "inCongress": false,
+    "intro": "Hallo, Ich bin Luui.\nIch bin einer der Babyboomer, die von unseren Veteranen hier herzlichst aufgenommen wurden. Nachdem ich nun meine Firmen etwas ausbauen konnte und nun im Befreiungskrieg mitgekämpft habe, möchte ich mich im Kongress neuen Herausforderungen stellen.",
+    "importantQuestions": [
+      "q02",
+      "q10",
+      "q04"
+    ],
+    "answers": {
+      "q01": 2,
+      "q02": 1,
+      "q07": 1,
+      "q08": 4,
+      "q05": 3,
+      "q06": 2,
+      "q09": 3,
+      "q10": 4,
+      "q03": 3,
+      "q04": 2
+    },
+    "statements": {
+      "q01": "Venezuela hat Reue gezeigt und versucht auch selbst sich uns anzunähern. So lange keine weiteren Vorfälle passieren sollte man ihnen eine zweite Chance geben - immerhin haben sie uns auch in den letzten Tagen ebenfalls unterstützt.",
+      "q02": "Die Schwedenfrage mit den Niederlanden ist nun vorerst geklärt - Schweden ist frei. Ich selbst sehe in den BeNeLux-Staaten schlagkräftige potetielle Verbündete und ich bin ein großer Befürworter einer Annäherung bis hin zum Bündnis.",
+      "q07": "Wir haben gesehen, dass wir trotz eines Teampartners der komplett seine Arbeit verweigert gewonnen haben - aber nur knapp. Deutschland sollte bei Turnieren all In gehen und verlorenes Gebiet im Zweifel mit Buffzurück holen.",
+      "q08": "Deutschland kann ruhig etwas größer werden, allerdings sollten wir nicht den selben Fehler wie die Niederlande machen, sonst stehen wir ebenfalls mehreren Rebellionen mit +100%% dmg Bonus gegenüber. Unsere Armee sollte jedoch unterstützt und Koordiniert werden sodass wir uns immer und überall einmichen können, wo wir es tun müssen.",
+      "q05": "dazu kann ich nichts sagen, außer - Ich werde mich keinem Fraktionszwang unterwerfen.",
+      "q06": "Bis auf den letzten Farbwechsel ist die Farbfrage weniger im Vordergrund gewesen. Gut so - Deutschland braucht Stabilität und Beständigkeit um in der Welt ernst genommen zu werden.",
+      "q09": "Ich bin keine Plaudertasche und möchte Deutschland gegen seine Gegner verteidigen.",
+      "q10": "Ich habe eine Familie und einen Job, bei dem ich nicht online sein kann, also bin ich höchstens den halben Tag da. Ich kann nichts versprechen, aber der Wille zu guter politischer Arbeit und zur Verbesserung unserer Situation ist da.",
+      "q03": "Dazu kann ich leider nichts saagen.",
+      "q04": "Ein ganz klares Jein!\nWir, als Deutschland sind allein durch unsere Bevölkerung eine riesen Wirtschaftsmacht. Wir können es uns leisten, unseren Freunden zu helfen und sollten dies auch tun. Allerdings nicht in ausweglosen Situationen und auch nicht bis zur Selbstaufgabe - Wir benötigen auch eigene Reserven."
+    }
+  },
+  {
+    "id": "k-36",
+    "name": "user_not_found",
+    "party": "deutschland",
+    "inCongress": true,
+    "intro": "Ich bin der Uwe und ich bin auch dabei. <--- das kann man noch ändern oder? ODER?",
+    "importantQuestions": [],
+    "answers": {
+      "q01": 2,
+      "q02": 4,
+      "q07": 1,
+      "q08": 3,
+      "q05": 3,
+      "q06": 2,
+      "q09": 3,
+      "q10": 5,
+      "q03": 2,
+      "q04": 2
+    },
+    "statements": {}
   }
 ]
