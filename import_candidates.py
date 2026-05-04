@@ -125,6 +125,7 @@ PARTY_OVERRIDES = {
     "marcell_davis": "azbarbeit",
     "fishi": "parteilos",
     "legendarylama": "parteilos",
+    "severin_von_koeln": "azbarbeit",
 }
 
 
