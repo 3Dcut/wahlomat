@@ -24,8 +24,8 @@
   const questions  = () => DATA().questions;
   const scoredQuestions = () => {
     const qs = questions();
-    const toggle = document.getElementById('toggle-spionage');
-    const includeSpionage = toggle ? toggle.checked : true;
+    const toggle = document.getElementById('btn-toggle-spionage');
+    const includeSpionage = toggle ? toggle.dataset.included === 'true' : true;
     return includeSpionage ? qs : qs.filter(q => q.id !== 'q09');
   };
   const candidates = () => DATA().candidates;
@@ -631,10 +631,24 @@
     if (window.innerWidth <= 840) section.querySelector('.results-mobile-tabs').style.display = 'flex';
 
     // Spionage toggle logic for dynamic recalculation
-    const spionageToggle = document.getElementById('toggle-spionage');
+    const spionageToggle = document.getElementById('btn-toggle-spionage');
     if (spionageToggle && !spionageToggle.dataset.listenerAttached) {
       spionageToggle.dataset.listenerAttached = 'true';
-      spionageToggle.addEventListener('change', () => {
+      spionageToggle.addEventListener('click', () => {
+        const isCurrentlyIncluded = spionageToggle.dataset.included === 'true';
+        const nextState = !isCurrentlyIncluded;
+        spionageToggle.dataset.included = nextState;
+        
+        if (nextState) {
+          spionageToggle.textContent = 'Frage 9: Spaßfrage zur Spionage aus der Wertung ausschließen';
+          spionageToggle.style.color = '';
+          spionageToggle.style.borderColor = '';
+        } else {
+          spionageToggle.textContent = 'Frage 9: Spaßfrage zur Spionage ausgeschlossen';
+          spionageToggle.style.color = 'var(--text-light)';
+          spionageToggle.style.borderColor = 'var(--danger)';
+        }
+
         if (document.getElementById('screen-results').classList.contains('visible')) {
           computeAllResults();
           computePartyResults();

@@ -32,12 +32,10 @@
   <nav class="wom-nav">
     <div class="wom-nav-inner">
       <a href="#start" class="wom-nav-title meta-title">🗳 WahlEra</a>
-      <div class="wom-nav-actions" style="display:flex; align-items:center;">
-        <label style="display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; cursor:pointer; color:var(--text-muted); margin-right: 0.5rem;" title="Spaßfrage (Spionage) in der Wertung berücksichtigen">
-          <input type="checkbox" id="toggle-spionage" checked style="accent-color:var(--accent); cursor:pointer;">
-          <span class="hidden sm:inline" style="white-space:nowrap;">Spionage werten</span>
-          <span class="sm:hidden" style="white-space:nowrap;">Spion</span>
-        </label>
+      <div class="wom-nav-actions" style="display:flex; align-items:center; gap: 0.5rem;">
+        <button id="btn-toggle-spionage" class="btn btn-ghost" style="font-size:0.75rem;padding:0.4rem 0.75rem;" data-included="true">
+          Frage 9: Spaßfrage zur Spionage aus der Wertung ausschließen
+        </button>
         <button id="btn-show-overview" class="btn btn-ghost" style="font-size:0.82rem;padding:0.4rem 0.75rem">
           Alle Antworten
         </button>
