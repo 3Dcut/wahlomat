@@ -1272,5 +1272,144 @@
       "q04": 2
     },
     "statements": {}
+  },
+  {
+    "id": "k-37",
+    "name": "MEPHISTO",
+    "party": "wumms",
+    "inCongress": false,
+    "intro": "Viele von euch kennen mich von den Schlachtfeldern. Als aktiver Soldat der Bundeswehr kämpfe ich für unsere Freiheit. Doch nun ist es Zeit, diesen Kampf im Kongress fortzusetzen.\n\nIch trete an für die W.U.M.S – die Widerstands- und Unabhängigkeitsbewegung für Militärische Souveränität. Mein Ziel ist ebenso klar: Deutschland soll wieder eine Supermacht werden!",
+    "importantQuestions": [
+      "q02",
+      "q07"
+    ],
+    "answers": {
+      "q01": 3,
+      "q02": 4,
+      "q07": 1,
+      "q08": 5,
+      "q05": 2,
+      "q06": 3,
+      "q09": 5,
+      "q10": 5,
+      "q03": 5,
+      "q04": 2
+    },
+    "statements": {
+      "q01": "Dazu habe ich aktuell keine klare Antwort. Dafür müssten weitere Gespräche stattfinden.",
+      "q02": "Ich sehe keine Partnerschaft mit der Benelux-Union. Nicht jetzt und auch nicht später. Wir haben bereits starke Verbündete, diese sollten gestärkt und gefestigt werden.",
+      "q07": "Das letzte Turnier hat gezeigt, dass es von Vorteil sein kann, auf solche Schlachten Priorität zu geben. Es gab einen großen Geld-Boost für uns. Ebenso kann dies auf unsere verbündeten Nationen übertragen werden. Vielleicht ist es sinnvoller, diese zu unterstützen, als mit Ach und Krach Kerngebiete zu verteidigen.",
+      "q08": "Aktuell sehe ich keine Gebietserweiterung vor. Das wird nur mit sehr viel Anstrengung möglich sein, vermutlich auch nur für eine kurze Zeit. Vorerst hat die Stärkung der Allianzen und der innere Ausbau der Wirtschaft Deutschlands Vorrang. Bei einer starken Allianz und einem verbesserten Wirtschaftsgefüge ist eine Gebietserweiterung wieder denkbar.",
+      "q05": "zu viele Einzelmeinungen führen zu sehr langen und zähen Entscheidungen. Freie Meinungsentscheidung ist aber ebenso wichtig.",
+      "q06": "Dazu kann ich aktuell keine Aussage treffen, da ich nicht viel davon mitbekommen habe.",
+      "q09": "Dafür gibt es andere die das mit Leidenschaft machen.",
+      "q10": "Ich verbringe durchschnittlich 2 Stunden am Tag in WarEra und möchte tiefer in die Spielgeschehnisse eintauchen. Nicht nur zuschauen, sondern auch etwas bewirken.",
+      "q03": "Genug vorhanden.",
+      "q04": "In Form von Bounties im Krieg gerne. Ein bestimmter Sicherheitsbedarf sollte jedoch gewährleistet bleiben. Spenden stimme ich auch zu, müssen aber abgestimmt werden."
+    }
+  },
+  {
+    "id": "k-38",
+    "name": "Julibean",
+    "party": "adav",
+    "inCongress": false,
+    "intro": "Ich bin Juli und kandidiere zum ersten mal für den deutschen Kongress! Ich stehe für eine schnelle Ausführung von Befehlen und bin über den Tag verteilt abrufbereit um an Entscheidungen und Gesetzesbeschlüssen teil zu haben.",
+    "importantQuestions": [
+      "q02",
+      "q03"
+    ],
+    "answers": {
+      "q01": 5,
+      "q02": 2,
+      "q07": 1,
+      "q08": 5,
+      "q05": 3,
+      "q06": 4,
+      "q09": 5,
+      "q10": 5,
+      "q03": 5,
+      "q04": 4
+    },
+    "statements": {
+      "q01": "Es gab keinerlei Zeichen der Reue von denjenigen, die nun wiedergewählt wurden. Es tat einem Leid erwischt worden zu sein und nicht, dass es so passiert ist. Kulturelle Unterschiede sind etwas anderes.",
+      "q02": "Nach vollständiger Zerteilung des BeNeLux Imperiums dürfen diese gerne in ihren Kerngebieten weiter existieren. Dies kann gerne als freundschaftliche Nachbarschaft laufen und nach dem Marineupdate gemeinsam durch Kolonien erweitert werden. BEER steht aber für mich vor den Niederlanden!",
+      "q07": "Das Turnier hat uns viel gekostet aber auch vorallem der lvl 20-25 Fraktion mit mittlerem Equipment viel Luft gegeben um sich neu aufzustellen und zu refinanzieren. Mit anderen Partnern kann es in Zukunft ja auch nur besser werden!",
+      "q08": "Es gibt wenig momentan erreichbares Gebiet um uns herum, dass nicht ständig rebellieren wird. Bis das Marineupdate Kolonien ermöglicht, sollte Deutschland weitesgehend in seinen Landesgrenzen bestehen und nur zur Strafe aber nicht als Dauerlösung Italien und Frankreich besetzen.",
+      "q05": "EIne Teilung zwischen Nationalen Zielen und inneren Zielen wäre angebracht. Im Krieg sollte man nicht gegen einen Allianzbefehl wählen, aber bei kontroverseren Themen, sollte man gerne nach einemem Gewissen wählen dürfen.",
+      "q06": "Dem Kongress hat zumindest in der Außenwirkung wenig Chatarbeit betrieben. Es wurden viele Artikel geschrieben und Discordpings gemacht, aber der Großteil liest nur den deutschen interenen Chat und dort ist oft schon die Stimmung gekippt, wenn Themen nicht ernst genommen worden sind und nur auf - entschuldigung - viel zu lange Infoartikel hingewiesen wurde. Da wir jetzt mehr Mitglieder sind, werde ich dafür einstehen mehr Chatarbeit zu machen und weniger WallOfText einzupflegen.",
+      "q09": "Die Community ist für mich das Wichtigste an WarEra und die Spielmechaniken kommen an zweiter Stelle. Die Auswanderung so vieler bekannter Gesichter ist eines der Sachen, die mich am meisten in der letzten Legislaturperiode gestört haben. Lasst die Deutschen in Deutschland bleiben und hoffen, dass Spielmechnische Möglichkeiten kommen um woanders und mehrfach angreifen zu können.",
+      "q10": "Ich bin durchgängig zumindest am mitlesen und werde das auch so weiter machen können, wenn ich in den Kongress gewählt werde. Aktualität und schnelle Entscheidungen sind hier wichtig für das politische Weiterkommen.",
+      "q03": "Ich bin der Meinung, dass die Proxys zwar spieltechnisch Sinn ergeben, aber der Grundpfeiler die Community und deren Interaktion ist. Und in den letzten Wochen sind viele Gesichter aus dem Chat verschwunden um Länder zu übernehmen und Proxys zu führen. Das finde ich sehr schade.",
+      "q04": "Unser Schaden bringt viel mehr als jedes Geld, dass wir senden können. In ganz engen Fällen ja, aber momentan fällt es uns ja schon schwer 5 rote Orders gleichzeitig zu finanzieren."
+    }
+  },
+  {
+    "id": "k-39",
+    "name": "TrueHaze",
+    "party": "wumms",
+    "inCongress": true,
+    "intro": "Haze halt, direkt für die Meinung des Volkes immer.",
+    "importantQuestions": [
+      "q01",
+      "q02"
+    ],
+    "answers": {
+      "q01": 1,
+      "q02": 5,
+      "q07": 2,
+      "q08": 2,
+      "q05": 3,
+      "q06": 2,
+      "q09": 3,
+      "q10": 4,
+      "q03": 5,
+      "q04": 2
+    },
+    "statements": {
+      "q01": "Die Forderungen von Änderung und Moderation wurden erfüllt sehe keinen weiteren Handlungsbedarf.",
+      "q02": "NL und BE haben sich diesen Weg mittlerweile selber verbaut.",
+      "q07": "Insofern man das Core Gebiet sichern kann, Turnier Prio.",
+      "q08": "Eine Expansion würde langfristig schon Sinn machen speziell bzgl. SR.",
+      "q05": "Jedem das seine.",
+      "q06": "Es gibt ein paar Sachen wo mehr logisches denken cool wäre.",
+      "q09": "Falls ich was mitbekommen teile ich dies wenn nicht dann nicht.",
+      "q10": "Ich verbringe wohl viel zu viel Zeit in dem Spiel.",
+      "q03": "Ich denke Proxys sind viel Arbeit für teils wenig nutzen.",
+      "q04": "Kommt auf den Bündnispartner und die Schlacht an."
+    }
+  },
+  {
+    "id": "k-40",
+    "name": "Clara0005",
+    "party": "deutschland",
+    "inCongress": true,
+    "intro": "Bundestagspräsidentin für starke Verwaltung",
+    "importantQuestions": [
+      "q02",
+      "q10"
+    ],
+    "answers": {
+      "q01": 2,
+      "q02": 4,
+      "q07": 1,
+      "q08": 3,
+      "q05": 2,
+      "q06": 1,
+      "q09": 3,
+      "q10": 5,
+      "q03": 4,
+      "q04": 1
+    },
+    "statements": {
+      "q01": "Die Moderation auf dem Discord Server hat sich dramatisch verbessert. Außerdem ist unklar ob dort jemals rechtsextremistisches Gedankengut als solches verherrlicht wurde oder die Ernsthaftigkeit des Themas schlichtweg nicht wahrgenommen wurde.",
+      "q02": "Unsere oberste Priorität ist die Befreiung unserer nordeuropäischen Alliierten von der niederländischen Besatzung. Ob eine Invasion niederländischer oder belgischer Kerngebiete stattfinden soll wird im Konsens mit BEER entschieden. Die Besetzung von Luxemburg soll aufrecht erhalten werden.",
+      "q07": "Hat doch letztes Mal gut funktioniert, oder?",
+      "q08": "Ich bin für eine Balance aus beiden. Unsere Spieler werden immer stärker und damit werden langfristig auch territoriale Expansionen möglich.",
+      "q05": "Ich halte diese Frage für schlecht formuliert. Der Kongress braucht selbstverständlich starke Regeln, aber wie die Fraktionen ihre Abgeordneten organisiseren ist ein anderes Thema.",
+      "q06": "Es gab eine Handvoll unzivilisierte Streitigkeiten, aber zum Großteil war die Arbeit sehr produktiv und verbessert sich auch durchgehend.",
+      "q10": "Ich setze mich bereits jetzt mehrmals die Woche für einige Stunden hin, um den Aufgaben meines Amtes gerecht zu werden. Daran wird sich nichts ändern.",
+      "q03": "Deutschland hat erfolgreich mehrere Staaten übernommen. Jetzt gilt es diese sinnvoll zu nutzen. An dem Versuch Belarus zu übernehmen sollte aufgrund der strategischen Lage festgehalten werden.",
+      "q04": "Ich stehe für pragmatische Außen- und Sicherheitspolitik. Dazu gehört die finanzielle Unterstützung unserer Partner"
+    }
   }
 ]

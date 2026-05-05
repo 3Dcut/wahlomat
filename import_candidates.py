@@ -18,7 +18,7 @@ import re
 # =============================================================================
 # Configuration
 # =============================================================================
-CSV_FILE = 'Wahl-O-Mat_ Kandidatenpositionierung (Antworten) - Formularantworten 1 (5).csv'
+CSV_FILE = 'Wahl-O-Mat_ Kandidatenpositionierung (Antworten) - Formularantworten 1 (6).csv'
 OUTPUT_FILE = 'candidates_data.json'
 CORRECTIONS_FILE = 'corrections.json'
 
