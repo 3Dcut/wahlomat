@@ -452,8 +452,8 @@
           const pct = r.matchPercent ?? 0;
           return `
             <div class="card hero-match-card animate-in" 
-                 style="--card-color:${color}; --card-color-alpha:${color}33; animation-delay:${i * 0.1}s"
-                 onclick="window.WAHLERA_APP.navigateToCompare('${r.candidate.id}')">
+                 style="--card-color:${color}; --card-color-alpha:${color}33; animation-delay:${i * 0.1}s; cursor:pointer;"
+                 onclick="window.WAHLERA_APP.navigateToProfile('${r.candidate.id}')">
               <div class="hero-rank-badge">${medal}</div>
               <div class="hero-avatar-wrap">
                 <div class="hero-avatar" style="border-color:${color}">${r.candidate.name[0]}</div>
@@ -580,8 +580,7 @@
       // Rows
       section.querySelectorAll('.result-row-compact').forEach(row => {
         row.addEventListener('click', () => {
-          renderCompare(row.dataset.candidateId);
-          showScreen('compare');
+          window.WAHLERA_APP.navigateToProfile(row.dataset.candidateId);
         });
       });
       // Show more
@@ -731,7 +730,7 @@
         const mpct = mr ? (mr.matchPercent ?? 0) : 0;
         const mlabel = mr && mr.matchPercent != null ? `${mr.matchPercent}%` : '–';
         return `
-          <div class="result-row" data-candidate-id="${c.id}" style="padding:0.5rem 0.75rem;gap:0.5rem;margin-left:1rem">
+          <div class="result-row" data-candidate-id="${c.id}" style="padding:0.5rem 0.75rem;gap:0.5rem;margin-left:1rem;cursor:pointer" onclick="window.WAHLERA_APP.navigateToProfile('${c.id}')">
             <span class="candidate-dot" style="background:${c.color};width:0.55rem;height:0.55rem"></span>
             <span style="font-size:0.82rem;color:var(--text);flex:0 0 auto;min-width:90px">${c.name}</span>
             <div class="result-bar-track">
@@ -778,7 +777,7 @@
         const cls = pct >= 70 ? 'cat-high' : pct >= 40 ? 'cat-mid' : 'cat-low';
         return `<td class="${cls}">${pct}%</td>`;
       }).join('');
-      return `<tr><td class="cat-name"><span class="candidate-dot" style="background:${c.color}"></span>${c.name}</td>${cells}</tr>`;
+      return `<tr><td class="cat-name" style="cursor:pointer" onclick="window.WAHLERA_APP.navigateToProfile('${c.id}')"><span class="candidate-dot" style="background:${c.color}"></span>${c.name}</td>${cells}</tr>`;
     }).join('');
 
     return `<table class="cat-table"><thead><tr><th style="text-align:left">Kandidat:in</th>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
@@ -869,12 +868,6 @@
       </div>`;
 
     section.querySelector('#btn-back-results').addEventListener('click', () => showScreen('results'));
-    // Animate candidate bars in compare
-    section.querySelectorAll('.result-row[data-candidate-id]').forEach(row => {
-      row.addEventListener('click', () => {
-        renderCompare(row.dataset.candidateId); showScreen('compare');
-      });
-    });
   }
 
   // ── Screen: Profile ────────────────────────────────────────────────
